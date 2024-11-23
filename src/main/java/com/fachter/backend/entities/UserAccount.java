@@ -6,17 +6,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 public class UserAccount implements UserDetails {
 
     @Id()
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(nullable = false, unique = true)
     private String username;
+    @Column(nullable = false)
     private String password;
 
     private boolean accountNonExpired = true;
@@ -32,13 +32,14 @@ public class UserAccount implements UserDetails {
     )
     private Set<UserRole> userRoles = new HashSet<>();
 
+    // Methods
+    
     public long getId() {
         return id;
     }
 
-    public UserAccount setId(long id) {
+    public void setId(long id) {
         this.id = id;
-        return this;
     }
 
     @Override
@@ -71,9 +72,8 @@ public class UserAccount implements UserDetails {
         return accountNonExpired;
     }
 
-    public UserAccount setAccountNonExpired(boolean accountNonExpired) {
+    public void setAccountNonExpired(boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
-        return this;
     }
 
     @Override
@@ -81,9 +81,8 @@ public class UserAccount implements UserDetails {
         return accountNonLocked;
     }
 
-    public UserAccount setAccountNonLocked(boolean accountNonLocked) {
+    public void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
-        return this;
     }
 
     @Override
@@ -91,9 +90,8 @@ public class UserAccount implements UserDetails {
         return credentialsNonExpired;
     }
 
-    public UserAccount setCredentialsNonExpired(boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
-        return this;
     }
 
     @Override
@@ -101,9 +99,8 @@ public class UserAccount implements UserDetails {
         return enabled;
     }
 
-    public UserAccount setEnabled(boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        return this;
     }
 
     public Set<UserRole> getUserRoles() {

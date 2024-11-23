@@ -30,11 +30,8 @@ public class RegisterUserUseCaseImpl implements RegisterUserUseCase {
             throw new InvalidDataException();
         if (userRepository.findByUsername(registerUserViewModel.username).isPresent())
             throw new UsernameAlreadyExistsException();
-        UserAccount user = new UserAccount()
-                .setUsername(registerUserViewModel.username)
-                .setPassword(
-                        passwordEncoder.encode(registerUserViewModel.password)
-                );
+        UserAccount user = new UserAccount().setUsername(registerUserViewModel.username)
+        		.setPassword(passwordEncoder.encode(registerUserViewModel.password));
         userRepository.save(user);
         return authenticationService.getAuthenticationResponseFromUser(user);
     }
