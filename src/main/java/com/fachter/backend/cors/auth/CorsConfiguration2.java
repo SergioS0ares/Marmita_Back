@@ -1,4 +1,4 @@
-package com.karlmarket.ecommerce.configuration;
+package com.fachter.backend.cors.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

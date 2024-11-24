@@ -1,4 +1,4 @@
-package com.fachter.backend.controllers.auth;
+package com.fachter.backend.controllers.authentication.auth;
 
 import com.fachter.backend.viewModels.auth.AuthenticationRequestViewModel;
 import com.fachter.backend.viewModels.auth.AuthenticationResponseViewModel;

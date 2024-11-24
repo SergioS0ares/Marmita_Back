@@ -1,6 +1,6 @@
 package com.fachter.backend.useCases.auth;
 
-import com.fachter.backend.controllers.auth.AuthenticationUseCase;
+import com.fachter.backend.controllers.authentication.auth.AuthenticationUseCase;
 import com.fachter.backend.entities.UserAccount;
 import com.fachter.backend.services.auth.AuthenticationService;
 import com.fachter.backend.viewModels.auth.AuthenticationRequestViewModel;
