@@ -1,9 +1,10 @@
 package com.fachter.backend.config;
 
-import com.fachter.backend.entities.UserAccount;
-import com.fachter.backend.entities.UserRole;
+import com.fachter.backend.models.auth.UserAccount;
+import com.fachter.backend.models.auth.UserRole;
 import com.fachter.backend.repositories.RoleRepository;
 import com.fachter.backend.repositories.UserRepository;
+
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;

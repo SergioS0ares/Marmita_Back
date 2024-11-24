@@ -1,10 +1,11 @@
-package com.fachter.backend.useCases.auth;
+package com.fachter.backend.services.auth;
 
-import com.fachter.backend.controllers.authentication.auth.AuthenticationUseCase;
-import com.fachter.backend.entities.UserAccount;
-import com.fachter.backend.services.auth.AuthenticationService;
-import com.fachter.backend.viewModels.auth.AuthenticationRequestViewModel;
-import com.fachter.backend.viewModels.auth.AuthenticationResponseViewModel;
+import com.fachter.backend.interfaces.AuthenticationService;
+import com.fachter.backend.interfaces.AuthenticationUseCase;
+import com.fachter.backend.models.auth.AuthenticationRequestViewModel;
+import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
+import com.fachter.backend.models.auth.UserAccount;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,4 +1,4 @@
-package com.fachter.backend.viewModels.other.auth;
+package com.fachter.backend.models.other;
 
 public class Phone {
 

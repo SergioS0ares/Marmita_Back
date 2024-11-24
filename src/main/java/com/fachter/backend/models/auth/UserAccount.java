@@ -1,4 +1,4 @@
-package com.fachter.backend.entities;
+package com.fachter.backend.models.auth;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;

@@ -2,8 +2,10 @@ package com.fachter.backend.controllers.auth;
 
 import com.fachter.backend.exceptions.InvalidDataException;
 import com.fachter.backend.exceptions.UsernameAlreadyExistsException;
-import com.fachter.backend.viewModels.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.viewModels.auth.RegisterUserViewModel;
+import com.fachter.backend.interfaces.RegisterUserUseCase;
+import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
+import com.fachter.backend.models.auth.RegisterUserViewModel;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

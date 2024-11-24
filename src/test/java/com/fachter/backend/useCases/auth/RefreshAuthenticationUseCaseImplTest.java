@@ -1,11 +1,13 @@
 package com.fachter.backend.useCases.auth;
 
 import com.fachter.backend.config.Role;
-import com.fachter.backend.entities.UserAccount;
-import com.fachter.backend.entities.UserRole;
+import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
+import com.fachter.backend.models.auth.UserAccount;
+import com.fachter.backend.models.auth.UserRole;
 import com.fachter.backend.services.auth.AuthenticationServiceImpl;
+import com.fachter.backend.services.auth.RefreshAuthenticationUseCaseImpl;
 import com.fachter.backend.utils.JsonWebTokenUtil;
-import com.fachter.backend.viewModels.auth.AuthenticationResponseViewModel;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

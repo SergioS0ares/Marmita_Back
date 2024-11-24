@@ -1,8 +1,8 @@
-package com.fachter.backend.viewModels.auth;
+package com.fachter.backend.models.auth;
 
 import java.util.UUID;
 
-import com.fachter.backend.viewModels.other.auth.*;
+import com.fachter.backend.models.other.*;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

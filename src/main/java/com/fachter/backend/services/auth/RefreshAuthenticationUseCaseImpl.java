@@ -1,9 +1,10 @@
-package com.fachter.backend.useCases.auth;
+package com.fachter.backend.services.auth;
 
-import com.fachter.backend.controllers.authentication.auth.RefreshAuthenticationUseCase;
-import com.fachter.backend.entities.UserAccount;
-import com.fachter.backend.services.auth.AuthenticationService;
-import com.fachter.backend.viewModels.auth.AuthenticationResponseViewModel;
+import com.fachter.backend.interfaces.AuthenticationService;
+import com.fachter.backend.interfaces.RefreshAuthenticationUseCase;
+import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
+import com.fachter.backend.models.auth.UserAccount;
+
 import org.springframework.stereotype.Service;
 
 @Service
