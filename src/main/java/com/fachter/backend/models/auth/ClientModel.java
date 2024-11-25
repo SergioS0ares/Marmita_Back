@@ -14,7 +14,7 @@ public class ClientModel {
 	
 	@jakarta.persistence.Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID Id;
+	private UUID id;
 
 	@Column(nullable = false)
 	private String nome;

@@ -7,7 +7,7 @@ import com.fachter.backend.interfaces.RegisterUserUseCase;
 import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
 import com.fachter.backend.models.auth.RegisterUserViewModel;
 import com.fachter.backend.models.auth.UserAccount;
-import com.fachter.backend.repositories.UserRepository;
+import com.fachter.backend.repositories.auth.UserRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

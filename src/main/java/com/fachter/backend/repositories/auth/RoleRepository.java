@@ -1,4 +1,4 @@
-package com.fachter.backend.repositories;
+package com.fachter.backend.repositories.auth;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

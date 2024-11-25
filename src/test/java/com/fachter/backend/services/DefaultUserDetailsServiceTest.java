@@ -1,7 +1,7 @@
 package com.fachter.backend.services;
 
 import com.fachter.backend.models.auth.UserAccount;
-import com.fachter.backend.repositories.UserRepository;
+import com.fachter.backend.repositories.auth.UserRepository;
 import com.fachter.backend.services.auth.DefaultUserDetailsService;
 
 import org.junit.jupiter.api.BeforeEach;

@@ -4,7 +4,7 @@ import com.fachter.backend.exceptions.InvalidDataException;
 import com.fachter.backend.exceptions.UsernameAlreadyExistsException;
 import com.fachter.backend.models.auth.RegisterUserViewModel;
 import com.fachter.backend.models.auth.UserAccount;
-import com.fachter.backend.repositories.UserRepository;
+import com.fachter.backend.repositories.auth.UserRepository;
 import com.fachter.backend.services.auth.AuthenticationServiceImpl;
 import com.fachter.backend.services.auth.RegisterUserUseCaseImpl;
 import com.fachter.backend.utils.JsonWebTokenUtil;

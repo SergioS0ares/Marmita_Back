@@ -2,7 +2,7 @@ package com.fachter.backend.controllers.auth;
 
 import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
 import com.fachter.backend.models.auth.RegisterUserViewModel;
-import com.fachter.backend.repositories.UserRepository;
+import com.fachter.backend.repositories.auth.UserRepository;
 import com.fachter.backend.utils.JsonWebTokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
