@@ -1,8 +1,8 @@
 package com.fachter.backend.interfaces;
 
-import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.models.auth.UserAccount;
+import com.fachter.backend.models.auth.AuthenticationResponseModel;
+import com.fachter.backend.models.auth.UserAccountModel;
 
 public interface RefreshAuthenticationUseCase {
-    AuthenticationResponseViewModel getRefreshedToken(UserAccount user);
+    AuthenticationResponseModel getRefreshedToken(UserAccountModel user);
 }

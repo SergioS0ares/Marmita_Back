@@ -1,9 +1,9 @@
 package com.fachter.backend.services.auth;
 
 import com.fachter.backend.interfaces.AuthenticationService;
-import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.models.auth.UserAccount;
-import com.fachter.backend.models.auth.UserRole;
+import com.fachter.backend.models.auth.AuthenticationResponseModel;
+import com.fachter.backend.models.auth.UserAccountModel;
+import com.fachter.backend.models.auth.UserRoleModel;
 import com.fachter.backend.utils.JsonWebTokenUtil;
 
 import org.springframework.stereotype.Service;
@@ -19,15 +19,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.jsonWebTokenUtil = jsonWebTokenUtil;
     }
 
-    public AuthenticationResponseViewModel getAuthenticationResponseFromUser(UserAccount userDetails) {
+    public AuthenticationResponseModel getAuthenticationResponseFromUser(UserAccountModel userDetails) {
         final String jwt = jsonWebTokenUtil.generateToken(userDetails);
-        return new AuthenticationResponseViewModel()
+        return new AuthenticationResponseModel()
                 .setAuthorities(getUserAuthorities(userDetails))
                 .setExpiresAt(jsonWebTokenUtil.extractExpiration(jwt).getTime())
                 .setToken(jwt);
     }
 
-    private List<String> getUserAuthorities(UserAccount userDetails) {
-        return userDetails.getUserRoles().stream().map(UserRole::getName).sorted().toList();
+    private List<String> getUserAuthorities(UserAccountModel userDetails) {
+        return userDetails.getUserRoles().stream().map(UserRoleModel::getName).sorted().toList();
     }
 }

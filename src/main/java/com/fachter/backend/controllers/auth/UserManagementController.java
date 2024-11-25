@@ -3,8 +3,8 @@ package com.fachter.backend.controllers.auth;
 import com.fachter.backend.exceptions.InvalidDataException;
 import com.fachter.backend.exceptions.UsernameAlreadyExistsException;
 import com.fachter.backend.interfaces.RegisterUserUseCase;
-import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.models.auth.RegisterUserViewModel;
+import com.fachter.backend.models.auth.AuthenticationResponseModel;
+import com.fachter.backend.models.auth.RegisterUserModel;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +24,9 @@ public class UserManagementController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterUserViewModel registerUserViewModel) {
+    public ResponseEntity<?> register(@RequestBody RegisterUserModel registerUserModel) {
         try {
-            AuthenticationResponseViewModel response = registerUserUseCase.register(registerUserViewModel);
+            AuthenticationResponseModel response = registerUserUseCase.register(registerUserModel);
             return ResponseEntity.ok(response);
         } catch (UsernameAlreadyExistsException e) {
             return new ResponseEntity<>("Username already exists!", HttpStatus.NOT_ACCEPTABLE);

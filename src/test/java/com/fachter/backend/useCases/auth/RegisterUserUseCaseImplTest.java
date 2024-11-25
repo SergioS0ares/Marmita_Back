@@ -2,8 +2,8 @@ package com.fachter.backend.useCases.auth;
 
 import com.fachter.backend.exceptions.InvalidDataException;
 import com.fachter.backend.exceptions.UsernameAlreadyExistsException;
-import com.fachter.backend.models.auth.RegisterUserViewModel;
-import com.fachter.backend.models.auth.UserAccount;
+import com.fachter.backend.models.auth.RegisterUserModel;
+import com.fachter.backend.models.auth.UserAccountModel;
 import com.fachter.backend.repositories.auth.UserRepository;
 import com.fachter.backend.services.auth.AuthenticationServiceImpl;
 import com.fachter.backend.services.auth.RegisterUserUseCaseImpl;
@@ -35,7 +35,7 @@ class RegisterUserUseCaseImplTest {
     private PasswordEncoder passwordEncoderMock;
     private RegisterUserUseCaseImpl useCase;
     @Captor
-    private ArgumentCaptor<UserAccount> captor;
+    private ArgumentCaptor<UserAccountModel> captor;
     private JsonWebTokenUtil jsonWebTokenUtil;
 
     @BeforeEach
@@ -51,25 +51,25 @@ class RegisterUserUseCaseImplTest {
     @Test
     void givenNullUsername_thenThrowException() {
         assertThrows(InvalidDataException.class, () -> useCase.register(
-                new RegisterUserViewModel().setPassword("test")
+                new RegisterUserModel().setPassword("test")
         ));
     }
 
     @Test
     void givenNullPassword_thenThrowException() {
         assertThrows(InvalidDataException.class, () -> useCase.register(
-                new RegisterUserViewModel().setUsername("test")
+                new RegisterUserModel().setUsername("test")
         ));
     }
 
     @Test
     void givenUsernameAlreadyExists_thenThrowException() {
         String existingUsername = "existing";
-        var existingUser = new UserAccount().setUsername(existingUsername);
+        var existingUser = new UserAccountModel().setUsername(existingUsername);
         when(userRepositoryMock.findByUsername(existingUsername)).thenReturn(Optional.of(existingUser));
 
         assertThrows(UsernameAlreadyExistsException.class, () -> useCase.register(
-                new RegisterUserViewModel().setUsername(existingUsername).setPassword("anything")));
+                new RegisterUserModel().setUsername(existingUsername).setPassword("anything")));
     }
 
     @Test
@@ -79,7 +79,7 @@ class RegisterUserUseCaseImplTest {
         when(userRepositoryMock.findByUsername(newUsername)).thenReturn(Optional.empty());
         when(passwordEncoderMock.encode(newPassword)).thenReturn("encoded new password");
 
-        var response = useCase.register(new RegisterUserViewModel().setUsername(newUsername).setPassword(newPassword));
+        var response = useCase.register(new RegisterUserModel().setUsername(newUsername).setPassword(newPassword));
 
         verify(userRepositoryMock).save(captor.capture());
         var persistedUser = captor.getValue();

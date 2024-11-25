@@ -2,9 +2,9 @@ package com.fachter.backend.controllers.auth;
 
 import com.fachter.backend.interfaces.AuthenticationUseCase;
 import com.fachter.backend.interfaces.RefreshAuthenticationUseCase;
-import com.fachter.backend.models.auth.AuthenticationRequestViewModel;
-import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.models.auth.UserAccount;
+import com.fachter.backend.models.auth.AuthenticationRequestModel;
+import com.fachter.backend.models.auth.AuthenticationResponseModel;
+import com.fachter.backend.models.auth.UserAccountModel;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +25,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponseViewModel> createAuthToken(@RequestBody AuthenticationRequestViewModel authenticationRequestViewModel) {
+    public ResponseEntity<AuthenticationResponseModel> createAuthToken(@RequestBody AuthenticationRequestModel authenticationRequestModel) {
         try {
-            AuthenticationResponseViewModel response = authenticationUseCase.authenticate(authenticationRequestViewModel);
+            AuthenticationResponseModel response = authenticationUseCase.authenticate(authenticationRequestModel);
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -35,7 +35,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/refresh-token")
-    public ResponseEntity<AuthenticationResponseViewModel> refreshToken(@AuthenticationPrincipal UserAccount user) {
+    public ResponseEntity<AuthenticationResponseModel> refreshToken(@AuthenticationPrincipal UserAccountModel user) {
         return ResponseEntity.ok(refreshAuthenticationUseCase.getRefreshedToken(user));
     }
 }

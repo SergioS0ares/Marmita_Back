@@ -1,6 +1,6 @@
 package com.fachter.backend.services;
 
-import com.fachter.backend.models.auth.UserAccount;
+import com.fachter.backend.models.auth.UserAccountModel;
 import com.fachter.backend.repositories.auth.UserRepository;
 import com.fachter.backend.services.auth.DefaultUserDetailsService;
 
@@ -36,7 +36,7 @@ class DefaultUserDetailsServiceTest {
 
     @Test
     void givenUserThenReturn() {
-        UserAccount existingUser = new UserAccount().setUsername("valid");
+        UserAccountModel existingUser = new UserAccountModel().setUsername("valid");
         when(userRepository.findByUsername("valid")).thenReturn(Optional.of(existingUser));
 
         var returnedUser = service.loadUserByUsername("valid");

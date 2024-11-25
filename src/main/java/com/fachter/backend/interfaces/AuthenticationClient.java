@@ -1,8 +1,8 @@
 package com.fachter.backend.interfaces;
 
-import com.fachter.backend.models.auth.AuthenticationRequestViewModel;
-import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
+import com.fachter.backend.models.auth.AuthenticationRequestModel;
+import com.fachter.backend.models.auth.AuthenticationResponseModel;
 
 public interface AuthenticationClient {
-	AuthenticationResponseViewModel authenticate(AuthenticationRequestViewModel authenticationRequestViewModel);
+	AuthenticationResponseModel authenticate(AuthenticationRequestModel authenticationRequestModel);
 }

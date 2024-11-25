@@ -2,8 +2,8 @@ package com.fachter.backend.services.auth;
 
 import com.fachter.backend.interfaces.AuthenticationService;
 import com.fachter.backend.interfaces.RefreshAuthenticationUseCase;
-import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.models.auth.UserAccount;
+import com.fachter.backend.models.auth.AuthenticationResponseModel;
+import com.fachter.backend.models.auth.UserAccountModel;
 
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class RefreshAuthenticationUseCaseImpl implements RefreshAuthenticationUs
     }
 
     @Override
-    public AuthenticationResponseViewModel getRefreshedToken(UserAccount user) {
+    public AuthenticationResponseModel getRefreshedToken(UserAccountModel user) {
         return authenticationService.getAuthenticationResponseFromUser(user);
     }
 }

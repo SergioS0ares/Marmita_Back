@@ -2,9 +2,9 @@ package com.fachter.backend.services.auth;
 
 import com.fachter.backend.interfaces.AuthenticationService;
 import com.fachter.backend.interfaces.AuthenticationUseCase;
-import com.fachter.backend.models.auth.AuthenticationRequestViewModel;
-import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.models.auth.UserAccount;
+import com.fachter.backend.models.auth.AuthenticationRequestModel;
+import com.fachter.backend.models.auth.AuthenticationResponseModel;
+import com.fachter.backend.models.auth.UserAccountModel;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,11 +25,11 @@ public class AuthenticationUseCaseImpl implements AuthenticationUseCase {
     }
 
     @Override
-    public AuthenticationResponseViewModel authenticate(AuthenticationRequestViewModel authenticationRequestViewModel) {
-        final UserAccount userDetails = (UserAccount) userDetailsService.loadUserByUsername(authenticationRequestViewModel.username);
+    public AuthenticationResponseModel authenticate(AuthenticationRequestModel authenticationRequestModel) {
+        final UserAccountModel userDetails = (UserAccountModel) userDetailsService.loadUserByUsername(authenticationRequestModel.username);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                authenticationRequestViewModel.username,
-                authenticationRequestViewModel.password
+                authenticationRequestModel.username,
+                authenticationRequestModel.password
         ));
         return authenticationService.getAuthenticationResponseFromUser(userDetails);
     }

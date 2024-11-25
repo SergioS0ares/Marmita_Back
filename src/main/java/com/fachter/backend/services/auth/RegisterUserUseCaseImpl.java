@@ -4,9 +4,9 @@ import com.fachter.backend.exceptions.InvalidDataException;
 import com.fachter.backend.exceptions.UsernameAlreadyExistsException;
 import com.fachter.backend.interfaces.AuthenticationService;
 import com.fachter.backend.interfaces.RegisterUserUseCase;
-import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.models.auth.RegisterUserViewModel;
-import com.fachter.backend.models.auth.UserAccount;
+import com.fachter.backend.models.auth.AuthenticationResponseModel;
+import com.fachter.backend.models.auth.RegisterUserModel;
+import com.fachter.backend.models.auth.UserAccountModel;
 import com.fachter.backend.repositories.auth.UserRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,13 +26,13 @@ public class RegisterUserUseCaseImpl implements RegisterUserUseCase {
     }
 
     @Override
-    public AuthenticationResponseViewModel register(RegisterUserViewModel registerUserViewModel) throws UsernameAlreadyExistsException, InvalidDataException {
-        if (registerUserViewModel.username == null || registerUserViewModel.password == null)
+    public AuthenticationResponseModel register(RegisterUserModel registerUserModel) throws UsernameAlreadyExistsException, InvalidDataException {
+        if (registerUserModel.username == null || registerUserModel.password == null)
             throw new InvalidDataException();
-        if (userRepository.findByUsername(registerUserViewModel.username).isPresent())
+        if (userRepository.findByUsername(registerUserModel.username).isPresent())
             throw new UsernameAlreadyExistsException();
-        UserAccount user = new UserAccount().setUsername(registerUserViewModel.username)
-        		.setPassword(passwordEncoder.encode(registerUserViewModel.password));
+        UserAccountModel user = new UserAccountModel().setUsername(registerUserModel.username)
+        		.setPassword(passwordEncoder.encode(registerUserModel.password));
         userRepository.save(user);
         return authenticationService.getAuthenticationResponseFromUser(user);
     }

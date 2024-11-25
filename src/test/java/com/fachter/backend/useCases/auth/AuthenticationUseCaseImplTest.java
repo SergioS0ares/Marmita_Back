@@ -1,10 +1,10 @@
 package com.fachter.backend.useCases.auth;
 
 import com.fachter.backend.config.Role;
-import com.fachter.backend.models.auth.AuthenticationRequestViewModel;
-import com.fachter.backend.models.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.models.auth.UserAccount;
-import com.fachter.backend.models.auth.UserRole;
+import com.fachter.backend.models.auth.AuthenticationRequestModel;
+import com.fachter.backend.models.auth.AuthenticationResponseModel;
+import com.fachter.backend.models.auth.UserAccountModel;
+import com.fachter.backend.models.auth.UserRoleModel;
 import com.fachter.backend.services.auth.AuthenticationServiceImpl;
 import com.fachter.backend.services.auth.AuthenticationUseCaseImpl;
 import com.fachter.backend.utils.JsonWebTokenUtil;
@@ -58,7 +58,7 @@ class AuthenticationUseCaseImplTest {
     void givenNoUserException_thenPassException() {
         when(userDetailsServiceMock.loadUserByUsername("anything")).thenThrow(UsernameNotFoundException.class);
         assertThrows(UsernameNotFoundException.class, () -> useCase.authenticate(
-                new AuthenticationRequestViewModel()
+                new AuthenticationRequestModel()
                         .setUsername("anything")
                         .setPassword("doesn't matter")
         ));
@@ -67,27 +67,27 @@ class AuthenticationUseCaseImplTest {
     @Test
     void givenUserButAuthenticationManagerThrowsException_thenPassException() {
         String username = "valid-user";
-        when(userDetailsServiceMock.loadUserByUsername(username)).thenReturn(new UserAccount().setUsername(username));
+        when(userDetailsServiceMock.loadUserByUsername(username)).thenReturn(new UserAccountModel().setUsername(username));
         when(authenticationManagerMock.authenticate(any())).thenThrow(RuntimeException.class);
 
         assertThrows(RuntimeException.class, () -> useCase.authenticate(
-                new AuthenticationRequestViewModel().setUsername(username).setPassword("invalid-password")));
+                new AuthenticationRequestModel().setUsername(username).setPassword("invalid-password")));
     }
 
     @Test
     void givenUser_thenCallAuthenticateAndReturnResponse() {
-        Set<UserRole> userRoles = new HashSet<>();
+        Set<UserRoleModel> userRoleModels = new HashSet<>();
         for (var role : Role.values()) {
-            userRoles.add(new UserRole().setName(role.name()));
+            userRoleModels.add(new UserRoleModel().setName(role.name()));
         }
         String username = "something";
         String password = "correctPassword";
-        UserAccount user = new UserAccount()
+        UserAccountModel user = new UserAccountModel()
                 .setUsername(username)
-                .setUserRoles(userRoles);
+                .setUserRoles(userRoleModels);
         when(userDetailsServiceMock.loadUserByUsername(username)).thenReturn(user);
 
-        AuthenticationResponseViewModel response = useCase.authenticate(new AuthenticationRequestViewModel()
+        AuthenticationResponseModel response = useCase.authenticate(new AuthenticationRequestModel()
                 .setUsername(username)
                 .setPassword(password));
 

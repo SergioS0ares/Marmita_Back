@@ -3,23 +3,23 @@ package com.fachter.backend.models.auth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthenticationResponseViewModel {
+public class AuthenticationResponseModel {
 
     public String token;
     public long expiresAt;
     public List<String> authorities = new ArrayList<>();
 
-    public AuthenticationResponseViewModel setToken(String token) {
+    public AuthenticationResponseModel setToken(String token) {
         this.token = token;
         return this;
     }
 
-    public AuthenticationResponseViewModel setExpiresAt(long expiresAt) {
+    public AuthenticationResponseModel setExpiresAt(long expiresAt) {
         this.expiresAt = expiresAt;
         return this;
     }
 
-    public AuthenticationResponseViewModel setAuthorities(List<String> authorities) {
+    public AuthenticationResponseModel setAuthorities(List<String> authorities) {
         this.authorities = authorities;
         return this;
     }

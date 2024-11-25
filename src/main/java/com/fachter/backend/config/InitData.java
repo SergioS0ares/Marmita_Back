@@ -1,7 +1,7 @@
 package com.fachter.backend.config;
 
-import com.fachter.backend.models.auth.UserAccount;
-import com.fachter.backend.models.auth.UserRole;
+import com.fachter.backend.models.auth.UserAccountModel;
+import com.fachter.backend.models.auth.UserRoleModel;
 import com.fachter.backend.repositories.auth.RoleRepository;
 import com.fachter.backend.repositories.auth.UserRepository;
 
@@ -30,14 +30,14 @@ public class InitData {
     public void insertInitData() {
         var roles = new HashSet<>(roleRepository.findAll());
         if (roles.isEmpty()) {
-            List<UserRole> allRoles = new ArrayList<>();
-            allRoles.add(new UserRole().setName(Role.ADMIN.name()));
-            allRoles.add(new UserRole().setName(Role.USER.name()));
+            List<UserRoleModel> allRoles = new ArrayList<>();
+            allRoles.add(new UserRoleModel().setName(Role.ADMIN.name()));
+            allRoles.add(new UserRoleModel().setName(Role.USER.name()));
             roleRepository.saveAll(allRoles);
             roles = new HashSet<>(allRoles);
         }
         if (userRepository.findByUsername("admin").isEmpty()) {
-            UserAccount admin = new UserAccount()
+            UserAccountModel admin = new UserAccountModel()
                     .setUsername("admin")
                     .setUserRoles(roles)
                     .setPassword(passwordEncoder.encode("admin123"));

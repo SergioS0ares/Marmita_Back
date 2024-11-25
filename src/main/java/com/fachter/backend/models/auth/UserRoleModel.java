@@ -7,14 +7,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class UserRole implements GrantedAuthority {
+public class UserRoleModel implements GrantedAuthority {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String name;
     @ManyToMany(mappedBy = "userRoles")
-    private Set<UserAccount> users = new HashSet<>();
+    private Set<UserAccountModel> users = new HashSet<>();
 
     @Override
     public String getAuthority() {
@@ -25,7 +25,7 @@ public class UserRole implements GrantedAuthority {
         return id;
     }
 
-    public UserRole setId(Long id) {
+    public UserRoleModel setId(Long id) {
         this.id = id;
         return this;
     }
@@ -34,16 +34,16 @@ public class UserRole implements GrantedAuthority {
         return name;
     }
 
-    public UserRole setName(String name) {
+    public UserRoleModel setName(String name) {
         this.name = name;
         return this;
     }
 
-    public Set<UserAccount> getUsers() {
+    public Set<UserAccountModel> getUsers() {
         return users;
     }
 
-    public UserRole setUsers(Set<UserAccount> users) {
+    public UserRoleModel setUsers(Set<UserAccountModel> users) {
         this.users = users;
         return this;
     }

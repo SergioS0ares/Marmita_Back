@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class UserAccount implements UserDetails {
+public class UserAccountModel implements UserDetails {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,7 +30,7 @@ public class UserAccount implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<UserRole> userRoles = new HashSet<>();
+    private Set<UserRoleModel> userRoleModels = new HashSet<>();
 
     // Methods
     
@@ -47,14 +47,14 @@ public class UserAccount implements UserDetails {
         return username;
     }
 
-    public UserAccount setUsername(String username) {
+    public UserAccountModel setUsername(String username) {
         this.username = username;
         return this;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userRoles;
+        return userRoleModels;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class UserAccount implements UserDetails {
         return password;
     }
 
-    public UserAccount setPassword(String password) {
+    public UserAccountModel setPassword(String password) {
         this.password = password;
         return this;
     }
@@ -103,12 +103,12 @@ public class UserAccount implements UserDetails {
         this.enabled = enabled;
     }
 
-    public Set<UserRole> getUserRoles() {
-        return userRoles;
+    public Set<UserRoleModel> getUserRoles() {
+        return userRoleModels;
     }
 
-    public UserAccount setUserRoles(Set<UserRole> userRoles) {
-        this.userRoles = userRoles;
+    public UserAccountModel setUserRoles(Set<UserRoleModel> userRoleModels) {
+        this.userRoleModels = userRoleModels;
         return this;
     }
 }
