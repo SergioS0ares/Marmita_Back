@@ -2,17 +2,16 @@ package com.fachter.backend.models.auth;
 
 import java.util.UUID;
 
-import com.fachter.backend.models.other.*;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class ClientModel {
 	
-	@jakarta.persistence.Id
+	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
@@ -25,13 +24,13 @@ public class ClientModel {
 	@Column(nullable = false)
 	private int quantPedido;
 	
-	private Phone telefone;
+	private String telefone;
 	
-	private Latitude latitude;
+	private String latitude;
 	
-	private Longitude longitude;
+	private String longitude;
 	
-	private JanelaHorarios sujestH;
+	private String sujestH;
 	
 
 	// metodos
@@ -48,19 +47,19 @@ public class ClientModel {
 		return quantPedido;
 	}
 	
-	public Phone getTelefone() {
+	public String getTelefone() {
 		return telefone;
 	}
 	
-	public Latitude getLatitude() {
+	public String getLatitude() {
 		return latitude;
 	}
 	
-	public Longitude getLongitude() {
+	public String getLongitude() {
 		return longitude;
 	}
 	
-	public JanelaHorarios getSujestH() {
+	public String getSujestH() {
 		return sujestH;
 	}
 	
@@ -76,19 +75,19 @@ public class ClientModel {
 		this.quantPedido = x;
 	}
 	
-	public void setTelefone(Phone telefone) {
+	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
 	
-	public void setLatitude(Latitude lat) {
+	public void setLatitude(String lat) {
 		this.latitude = lat;
 	}
 	
-	public void setLongitude(Longitude lon) {
+	public void setLongitude(String lon) {
 		this.longitude = lon;
 	}
 	
-	public void setSujestH(JanelaHorarios sujestH) {
+	public void setSujestH(String sujestH) {
 		this.sujestH = sujestH;
 	}
 }

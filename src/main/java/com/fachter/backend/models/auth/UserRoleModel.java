@@ -9,11 +9,11 @@ import java.util.Set;
 @Entity
 public class UserRoleModel implements GrantedAuthority {
 
-    @Id()
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "userRoles")
+    @ManyToMany(mappedBy = "userRoleModels")
     private Set<UserAccountModel> users = new HashSet<>();
 
     @Override
