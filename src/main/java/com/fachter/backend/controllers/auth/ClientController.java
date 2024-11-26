@@ -14,15 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fachter.backend.models.auth.ClientModel;
-import com.fachter.backend.repositories.auth.ClientRepository;
 import com.fachter.backend.services.auth.ClienteService;
 
 @RestController
 @RequestMapping("/client")
 public class ClientController {
-	
-	@Autowired
-	private ClientRepository repo;
+
 	@Autowired
 	private ClienteService serv;
 	
