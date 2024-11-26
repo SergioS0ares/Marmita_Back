@@ -9,6 +9,7 @@ import com.fachter.backend.utils.JsonWebTokenUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -28,6 +29,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private List<String> getUserAuthorities(UserAccountModel userDetails) {
-        return userDetails.getUserRoles().stream().map(UserRoleModel::getName).sorted().toList();
+        return userDetails.getUserRoles().stream()
+                .map(UserRoleModel::getName)
+                .sorted()
+                .collect(Collectors.toList());
     }
 }
