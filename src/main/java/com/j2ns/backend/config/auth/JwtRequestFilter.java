@@ -1,7 +1,5 @@
-package com.fachter.backend.config.auth;
+package com.j2ns.backend.config.auth;
 
-import com.fachter.backend.services.auth.DefaultUserDetailsService;
-import com.fachter.backend.utils.JsonWebTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.j2ns.backend.services.auth.DefaultUserDetailsService;
+import com.j2ns.backend.utils.JsonWebTokenUtil;
 
 import java.io.IOException;
 

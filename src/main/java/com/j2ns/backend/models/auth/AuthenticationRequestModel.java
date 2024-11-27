@@ -1,4 +1,4 @@
-package com.fachter.backend.models.auth;
+package com.j2ns.backend.models.auth;
 
 public class AuthenticationRequestModel {
 

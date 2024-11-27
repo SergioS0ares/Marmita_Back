@@ -1,16 +1,16 @@
-package com.fachter.backend.services.auth;
-
-import com.fachter.backend.exceptions.InvalidDataException;
-import com.fachter.backend.exceptions.UsernameAlreadyExistsException;
-import com.fachter.backend.interfaces.AuthenticationService;
-import com.fachter.backend.interfaces.RegisterUserUseCase;
-import com.fachter.backend.models.auth.AuthenticationResponseModel;
-import com.fachter.backend.models.auth.RegisterUserModel;
-import com.fachter.backend.models.auth.UserAccountModel;
-import com.fachter.backend.repositories.auth.UserRepository;
+package com.j2ns.backend.services.auth;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.j2ns.backend.exceptions.InvalidDataException;
+import com.j2ns.backend.exceptions.UsernameAlreadyExistsException;
+import com.j2ns.backend.interfaces.AuthenticationService;
+import com.j2ns.backend.interfaces.RegisterUserUseCase;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.models.auth.RegisterUserModel;
+import com.j2ns.backend.models.auth.UserAccountModel;
+import com.j2ns.backend.repositories.auth.UserRepository;
 
 @Service
 public class RegisterUserUseCaseImpl implements RegisterUserUseCase {

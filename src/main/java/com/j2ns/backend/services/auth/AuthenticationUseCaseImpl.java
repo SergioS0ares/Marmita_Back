@@ -1,15 +1,15 @@
-package com.fachter.backend.services.auth;
-
-import com.fachter.backend.interfaces.AuthenticationService;
-import com.fachter.backend.interfaces.AuthenticationUseCase;
-import com.fachter.backend.models.auth.AuthenticationRequestModel;
-import com.fachter.backend.models.auth.AuthenticationResponseModel;
-import com.fachter.backend.models.auth.UserAccountModel;
+package com.j2ns.backend.services.auth;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import com.j2ns.backend.interfaces.AuthenticationService;
+import com.j2ns.backend.interfaces.AuthenticationUseCase;
+import com.j2ns.backend.models.auth.AuthenticationRequestModel;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.models.auth.UserAccountModel;
 
 @Service
 public class AuthenticationUseCaseImpl implements AuthenticationUseCase {

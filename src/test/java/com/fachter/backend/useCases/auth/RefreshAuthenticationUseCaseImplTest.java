@@ -1,16 +1,16 @@
 package com.fachter.backend.useCases.auth;
 
-import com.fachter.backend.config.Role;
-import com.fachter.backend.models.auth.AuthenticationResponseModel;
-import com.fachter.backend.models.auth.UserAccountModel;
-import com.fachter.backend.models.auth.UserRoleModel;
-import com.fachter.backend.services.auth.AuthenticationServiceImpl;
-import com.fachter.backend.services.auth.RefreshAuthenticationUseCaseImpl;
-import com.fachter.backend.utils.JsonWebTokenUtil;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.j2ns.backend.config.Role;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.models.auth.UserAccountModel;
+import com.j2ns.backend.models.auth.UserRoleModel;
+import com.j2ns.backend.services.auth.AuthenticationServiceImpl;
+import com.j2ns.backend.services.auth.RefreshAuthenticationUseCaseImpl;
+import com.j2ns.backend.utils.JsonWebTokenUtil;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;

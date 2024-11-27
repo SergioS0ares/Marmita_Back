@@ -1,14 +1,5 @@
 package com.fachter.backend.useCases.auth;
 
-import com.fachter.backend.exceptions.InvalidDataException;
-import com.fachter.backend.exceptions.UsernameAlreadyExistsException;
-import com.fachter.backend.models.auth.RegisterUserModel;
-import com.fachter.backend.models.auth.UserAccountModel;
-import com.fachter.backend.repositories.auth.UserRepository;
-import com.fachter.backend.services.auth.AuthenticationServiceImpl;
-import com.fachter.backend.services.auth.RegisterUserUseCaseImpl;
-import com.fachter.backend.utils.JsonWebTokenUtil;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +8,15 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.j2ns.backend.exceptions.InvalidDataException;
+import com.j2ns.backend.exceptions.UsernameAlreadyExistsException;
+import com.j2ns.backend.models.auth.RegisterUserModel;
+import com.j2ns.backend.models.auth.UserAccountModel;
+import com.j2ns.backend.repositories.auth.UserRepository;
+import com.j2ns.backend.services.auth.AuthenticationServiceImpl;
+import com.j2ns.backend.services.auth.RegisterUserUseCaseImpl;
+import com.j2ns.backend.utils.JsonWebTokenUtil;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;

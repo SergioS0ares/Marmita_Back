@@ -1,7 +1,7 @@
-package com.fachter.backend.interfaces;
+package com.j2ns.backend.interfaces;
 
-import com.fachter.backend.models.auth.AuthenticationRequestModel;
-import com.fachter.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.models.auth.AuthenticationRequestModel;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
 
 public interface AuthenticationUseCase {
     AuthenticationResponseModel authenticate(AuthenticationRequestModel authenticationRequestModel);

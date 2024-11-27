@@ -1,11 +1,11 @@
-package com.fachter.backend.services.auth;
+package com.j2ns.backend.services.auth;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.fachter.backend.repositories.auth.UserRepository;
+import com.j2ns.backend.repositories.auth.UserRepository;
 
 @Service
 public class DefaultUserDetailsService implements UserDetailsService {

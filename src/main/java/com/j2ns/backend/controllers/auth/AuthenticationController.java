@@ -1,16 +1,16 @@
-package com.fachter.backend.controllers.auth;
-
-import com.fachter.backend.interfaces.AuthenticationUseCase;
-import com.fachter.backend.interfaces.RefreshAuthenticationUseCase;
-import com.fachter.backend.models.auth.AuthenticationRequestModel;
-import com.fachter.backend.models.auth.AuthenticationResponseModel;
-import com.fachter.backend.models.auth.UserAccountModel;
+package com.j2ns.backend.controllers.auth;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import com.j2ns.backend.interfaces.AuthenticationUseCase;
+import com.j2ns.backend.interfaces.RefreshAuthenticationUseCase;
+import com.j2ns.backend.models.auth.AuthenticationRequestModel;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.models.auth.UserAccountModel;
 
 @RestController
 @RequestMapping("/api")

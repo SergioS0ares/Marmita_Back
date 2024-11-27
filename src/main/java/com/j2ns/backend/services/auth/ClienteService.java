@@ -1,4 +1,4 @@
-package com.fachter.backend.services.auth;
+package com.j2ns.backend.services.auth;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fachter.backend.models.auth.ClientModel;
-import com.fachter.backend.repositories.auth.ClientRepository;
+import com.j2ns.backend.models.auth.ClientModel;
+import com.j2ns.backend.repositories.auth.ClientRepository;
 
 @Service
 public class ClienteService {

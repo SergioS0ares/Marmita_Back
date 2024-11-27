@@ -1,4 +1,4 @@
-package com.fachter.backend.controllers.auth;
+package com.j2ns.backend.controllers.auth;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fachter.backend.models.auth.ClientModel;
-import com.fachter.backend.services.auth.ClienteService;
+import com.j2ns.backend.models.auth.ClientModel;
+import com.j2ns.backend.services.auth.ClienteService;
 
 @RestController
 @RequestMapping("/client")

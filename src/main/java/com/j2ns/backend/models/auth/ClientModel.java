@@ -1,4 +1,4 @@
-package com.fachter.backend.models.auth;
+package com.j2ns.backend.models.auth;
 
 import java.util.UUID;
 
@@ -31,9 +31,14 @@ public class ClientModel {
 	private String longitude;
 	
 	private String sujestH;
-	
 
+	
 	// metodos
+	
+	
+	public UUID getId() {
+		return id;
+	}
 	
 	public String getNome() {
 		return nome;
@@ -89,5 +94,9 @@ public class ClientModel {
 	
 	public void setSujestH(String sujestH) {
 		this.sujestH = sujestH;
+	}
+	
+	public void setId(UUID id) {
+		this.id = id;
 	}
 }

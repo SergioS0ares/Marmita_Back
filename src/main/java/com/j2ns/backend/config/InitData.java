@@ -1,14 +1,14 @@
-package com.fachter.backend.config;
-
-import com.fachter.backend.models.auth.UserAccountModel;
-import com.fachter.backend.models.auth.UserRoleModel;
-import com.fachter.backend.repositories.auth.RoleRepository;
-import com.fachter.backend.repositories.auth.UserRepository;
+package com.j2ns.backend.config;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.j2ns.backend.models.auth.UserAccountModel;
+import com.j2ns.backend.models.auth.UserRoleModel;
+import com.j2ns.backend.repositories.auth.RoleRepository;
+import com.j2ns.backend.repositories.auth.UserRepository;
 
 import java.util.ArrayList;
 import java.util.HashSet;

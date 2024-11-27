@@ -1,6 +1,5 @@
-package com.fachter.backend.config.auth;
+package com.j2ns.backend.config.auth;
 
-import com.fachter.backend.config.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.j2ns.backend.config.Role;
 
 import java.util.Arrays;
 import java.util.Collections;

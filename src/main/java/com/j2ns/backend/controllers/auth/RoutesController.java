@@ -1,4 +1,4 @@
-package com.fachter.backend.controllers.auth;
+package com.j2ns.backend.controllers.auth;
 
 public class RoutesController {
 

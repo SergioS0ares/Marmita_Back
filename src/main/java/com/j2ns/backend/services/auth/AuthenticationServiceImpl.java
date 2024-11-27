@@ -1,12 +1,12 @@
-package com.fachter.backend.services.auth;
-
-import com.fachter.backend.interfaces.AuthenticationService;
-import com.fachter.backend.models.auth.AuthenticationResponseModel;
-import com.fachter.backend.models.auth.UserAccountModel;
-import com.fachter.backend.models.auth.UserRoleModel;
-import com.fachter.backend.utils.JsonWebTokenUtil;
+package com.j2ns.backend.services.auth;
 
 import org.springframework.stereotype.Service;
+
+import com.j2ns.backend.interfaces.AuthenticationService;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.models.auth.UserAccountModel;
+import com.j2ns.backend.models.auth.UserRoleModel;
+import com.j2ns.backend.utils.JsonWebTokenUtil;
 
 import java.util.List;
 
