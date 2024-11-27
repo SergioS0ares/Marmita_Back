@@ -1,10 +1,11 @@
 package com.fachter.backend.controllers.auth;
 
-import com.fachter.backend.config.Role;
-import com.fachter.backend.models.auth.AuthenticationRequestModel;
-import com.fachter.backend.models.auth.AuthenticationResponseModel;
-import com.fachter.backend.utils.JsonWebTokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j2ns.backend.config.Role;
+import com.j2ns.backend.models.auth.AuthenticationRequestModel;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.utils.JsonWebTokenUtil;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
