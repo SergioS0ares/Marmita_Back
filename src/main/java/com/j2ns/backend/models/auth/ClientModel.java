@@ -21,15 +21,19 @@ public class ClientModel {
 	@Column(nullable = false)
 	private String descricaoEndereco;
 
-	@Column(nullable = false)
+	@Column
 	private int quantPedido;
 	
+	@Column
 	private String telefone;
 	
+	@Column
 	private String latitude;
 	
+	@Column
 	private String longitude;
 	
+	@Column
 	private String sujestH;
 
 	
