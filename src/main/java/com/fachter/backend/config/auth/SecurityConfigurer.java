@@ -68,6 +68,7 @@ public class SecurityConfigurer {
                                 "/api/authenticate",
                                 "/api/register"
                         ).permitAll()
+                        .requestMatchers("/cliente/**").hasAuthority("USER")
                         .requestMatchers("/api/user/**").hasAuthority(Role.ADMIN.name())
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

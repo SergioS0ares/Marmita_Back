@@ -15,7 +15,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @PostMapping
+    @PostMapping("/cliente")
     public ResponseEntity<Cliente> salvarCliente(@RequestBody Cliente cliente) {
         Cliente clienteSalvo = clienteService.salvarCliente(cliente);
         return ResponseEntity.ok(clienteSalvo);
