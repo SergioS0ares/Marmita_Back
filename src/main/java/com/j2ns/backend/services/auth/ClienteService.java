@@ -31,4 +31,29 @@ public class ClienteService {
 	public ClientModel saveClient(ClientModel client) {
 		return repo.save(client);
 	}
+	
+	public void deleteClientById(UUID id) {
+	    if (repo.existsById(id)) {
+	        repo.deleteById(id);
+	    } else {
+	        throw new IllegalArgumentException("Cliente com o ID " + id + " não encontrado.");
+	    }
+	}
+	
+	public void deleteAllClients() {
+	    repo.deleteAll();
+	}
+	
+	public ClientModel updateClient(UUID id, ClientModel updatedClient) {
+	    return repo.findById(id).map(existingClient -> {
+	        existingClient.setNome(updatedClient.getNome());
+	        existingClient.setDescricaoEndereco(updatedClient.getDescricaoEndereco());
+	        existingClient.setQuantPedido(updatedClient.getQuantPedido());
+	        existingClient.setTelefone(updatedClient.getTelefone());
+	        existingClient.setLatitude(updatedClient.getLatitude());
+	        existingClient.setLongitude(updatedClient.getLongitude());
+	        existingClient.setSujestH(updatedClient.getSujestH());
+	        return repo.save(existingClient); // Salva as alterações no banco
+	    }).orElseThrow(() -> new IllegalArgumentException("Cliente com ID " + id + " não encontrado."));
+	}
 }
