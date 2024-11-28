@@ -34,7 +34,7 @@ public class ClientModel {
 	private String longitude;
 	
 	@Column
-	private SujestHorario sujestH;
+	private String sujestH;
 
 	
 	// metodos
