@@ -1,14 +1,15 @@
 package com.fachter.backend.services;
 
-import com.fachter.backend.entities.UserAccount;
-import com.fachter.backend.repositories.UserRepository;
-import com.fachter.backend.services.auth.DefaultUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import com.j2ns.backend.models.auth.UserAccountModel;
+import com.j2ns.backend.repositories.auth.UserRepository;
+import com.j2ns.backend.services.auth.DefaultUserDetailsService;
 
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ class DefaultUserDetailsServiceTest {
 
     @Test
     void givenUserThenReturn() {
-        UserAccount existingUser = new UserAccount().setUsername("valid");
+        UserAccountModel existingUser = new UserAccountModel().setUsername("valid");
         when(userRepository.findByUsername("valid")).thenReturn(Optional.of(existingUser));
 
         var returnedUser = service.loadUserByUsername("valid");

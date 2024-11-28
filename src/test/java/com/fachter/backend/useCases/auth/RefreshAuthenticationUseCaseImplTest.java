@@ -1,14 +1,16 @@
 package com.fachter.backend.useCases.auth;
 
-import com.fachter.backend.config.Role;
-import com.fachter.backend.entities.UserAccount;
-import com.fachter.backend.entities.UserRole;
-import com.fachter.backend.services.auth.AuthenticationServiceImpl;
-import com.fachter.backend.utils.JsonWebTokenUtil;
-import com.fachter.backend.viewModels.auth.AuthenticationResponseViewModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.j2ns.backend.config.Role;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.models.auth.UserAccountModel;
+import com.j2ns.backend.models.auth.UserRoleModel;
+import com.j2ns.backend.services.auth.AuthenticationServiceImpl;
+import com.j2ns.backend.services.auth.RefreshAuthenticationUseCaseImpl;
+import com.j2ns.backend.utils.JsonWebTokenUtil;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -27,11 +29,11 @@ class RefreshAuthenticationUseCaseImplTest {
                         jwtUtil
                 )
         );
-        UserAccount user = new UserAccount()
+        UserAccountModel user = new UserAccountModel()
                 .setUsername("currentUser")
-                .setUserRoles(Set.of(new UserRole().setName(Role.USER.name())));
+                .setUserRoles(Set.of(new UserRoleModel().setName(Role.USER.name())));
 
-        AuthenticationResponseViewModel response = useCase.getRefreshedToken(user);
+        AuthenticationResponseModel response = useCase.getRefreshedToken(user);
 
         assertEquals("currentUser", jwtUtil.extractUsername(response.token));
         long expected = LocalDateTime.now().plusDays(3).toEpochSecond(OffsetDateTime.now().getOffset()) * 1000;

@@ -1,10 +1,11 @@
 package com.fachter.backend.controllers.auth;
 
-import com.fachter.backend.config.Role;
-import com.fachter.backend.utils.JsonWebTokenUtil;
-import com.fachter.backend.viewModels.auth.AuthenticationRequestViewModel;
-import com.fachter.backend.viewModels.auth.AuthenticationResponseViewModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j2ns.backend.config.Role;
+import com.j2ns.backend.models.auth.AuthenticationRequestModel;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.utils.JsonWebTokenUtil;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -38,7 +39,7 @@ class AuthenticationControllerIntegrationTest {
 
     @Test
     public void createAuthenticationToken_givenInvalidUsername_thenReturnUnauthorized() throws Exception {
-        String content = objectMapper.writeValueAsString(new AuthenticationRequestViewModel()
+        String content = objectMapper.writeValueAsString(new AuthenticationRequestModel()
                 .setUsername("invalid-username")
                 .setPassword("unimportant"));
 
@@ -52,7 +53,7 @@ class AuthenticationControllerIntegrationTest {
 
     @Test
     public void createAuthenticationToken_givenInvalidPassword_thenReturnUnauthorized() throws Exception {
-        String content = objectMapper.writeValueAsString(new AuthenticationRequestViewModel()
+        String content = objectMapper.writeValueAsString(new AuthenticationRequestModel()
                 .setUsername("admin")
                 .setPassword("invalid-password"));
 
@@ -65,7 +66,7 @@ class AuthenticationControllerIntegrationTest {
 
     @Test
     void givenValidCredentials_thenReturnResponseViewModel() throws Exception {
-        String content = objectMapper.writeValueAsString(new AuthenticationRequestViewModel()
+        String content = objectMapper.writeValueAsString(new AuthenticationRequestModel()
                 .setUsername("admin")
                 .setPassword("admin123"));
 
@@ -76,8 +77,8 @@ class AuthenticationControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        AuthenticationResponseViewModel response = objectMapper
-                .readValue(mvcResult.getResponse().getContentAsByteArray(), AuthenticationResponseViewModel.class);
+        AuthenticationResponseModel response = objectMapper
+                .readValue(mvcResult.getResponse().getContentAsByteArray(), AuthenticationResponseModel.class);
         assertEquals(List.of(Role.ADMIN.name(), Role.USER.name()), response.authorities);
         assertEquals("admin", jsonWebTokenUtil.extractUsername(response.token));
     }
@@ -97,8 +98,8 @@ class AuthenticationControllerIntegrationTest {
                         get("/api/refresh-token").header("Authorization", validJwt))
                 .andExpect(status().isOk()).andReturn();
 
-        AuthenticationResponseViewModel response = objectMapper
-                .readValue(mvcResult.getResponse().getContentAsByteArray(), AuthenticationResponseViewModel.class);
+        AuthenticationResponseModel response = objectMapper
+                .readValue(mvcResult.getResponse().getContentAsByteArray(), AuthenticationResponseModel.class);
         assertEquals(List.of(Role.ADMIN.name(), Role.USER.name()), response.authorities);
         assertEquals("admin", jsonWebTokenUtil.extractUsername(response.token));
     }

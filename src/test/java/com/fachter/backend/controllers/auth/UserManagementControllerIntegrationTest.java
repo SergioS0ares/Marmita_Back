@@ -1,10 +1,11 @@
 package com.fachter.backend.controllers.auth;
 
-import com.fachter.backend.repositories.UserRepository;
-import com.fachter.backend.utils.JsonWebTokenUtil;
-import com.fachter.backend.viewModels.auth.AuthenticationResponseViewModel;
-import com.fachter.backend.viewModels.auth.RegisterUserViewModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j2ns.backend.models.auth.AuthenticationResponseModel;
+import com.j2ns.backend.models.auth.RegisterUserModel;
+import com.j2ns.backend.repositories.auth.UserRepository;
+import com.j2ns.backend.utils.JsonWebTokenUtil;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ class UserManagementControllerIntegrationTest {
 
     @Test
     void register_givenViewModelWithoutContent_thenReturn400() throws Exception {
-        String content = objectMapper.writeValueAsString(new RegisterUserViewModel());
+        String content = objectMapper.writeValueAsString(new RegisterUserModel());
 
         MvcResult mvcResult = mockMvc.perform(
                         post("/api/register")
@@ -65,7 +66,7 @@ class UserManagementControllerIntegrationTest {
 
     @Test
     void register_givenUsernameAlreadyExists_thenReturn406() throws Exception {
-        String content = objectMapper.writeValueAsString(new RegisterUserViewModel()
+        String content = objectMapper.writeValueAsString(new RegisterUserModel()
                 .setUsername("admin")
                 .setPassword("does not matter"));
 
@@ -81,7 +82,7 @@ class UserManagementControllerIntegrationTest {
     @Test
     void register_givenNewUsername_thenSaveAndReturn200() throws Exception {
         String password = "does-actually-matter";
-        String content = objectMapper.writeValueAsString(new RegisterUserViewModel()
+        String content = objectMapper.writeValueAsString(new RegisterUserModel()
                 .setUsername(username)
                 .setPassword(password));
 
@@ -95,8 +96,8 @@ class UserManagementControllerIntegrationTest {
         assertTrue(user.isPresent());
         assertEquals(username, user.get().getUsername());
         assertTrue(passwordEncoder.matches(password, user.get().getPassword()));
-        AuthenticationResponseViewModel response = objectMapper
-                .readValue(mvcResult.getResponse().getContentAsByteArray(), AuthenticationResponseViewModel.class);
+        AuthenticationResponseModel response = objectMapper
+                .readValue(mvcResult.getResponse().getContentAsByteArray(), AuthenticationResponseModel.class);
         assertEquals(username, jsonWebTokenUtil.extractUsername(response.token));
 
     }
