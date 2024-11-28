@@ -1,8 +1,8 @@
-package com.fachter.backend.controllers.auth;
+package com.j2ns.backend.controllers.auth;
 
-import com.fachter.backend.utils.EntregaDTO;
-import com.fachter.backend.utils.RotaDTO;
-import com.fachter.backend.utils.UtilsCaixeiro;
+import com.j2ns.backend.utils.EntregaDTO;
+import com.j2ns.backend.utils.RotaDTO;
+import com.j2ns.backend.utils.UtilsCaixeiro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

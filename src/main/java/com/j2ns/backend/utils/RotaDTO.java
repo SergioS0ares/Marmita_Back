@@ -1,4 +1,4 @@
-package com.fachter.backend.utils;
+package com.j2ns.backend.utils;
 
 import java.util.List;
 
