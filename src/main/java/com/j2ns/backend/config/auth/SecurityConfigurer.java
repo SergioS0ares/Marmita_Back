@@ -32,68 +32,69 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfigurer {
 
-    private final JwtRequestFilter jwtRequestFilter;
+    private final JwtRequestFilter jwtRequestFilter; // Filtro para interceptar as requisições e validar o JWT.
+    
     @Value("${backend.allowed.origins}")
-    private List<String> allowedOrigins;
+    private List<String> allowedOrigins; // Lista de origens permitidas para CORS, obtida do arquivo de configurações.
 
+    // Construtor que recebe o filtro de requisição JWT.
     public SecurityConfigurer(JwtRequestFilter jwtRequestFilter) {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
+    // Bean que cria o AuthenticationManager, configurando a autenticação do usuário e a senha.
     @Bean
     public AuthenticationManager authenticationManager(
-            HttpSecurity http,
-            PasswordEncoder passwordEncoder,
+            HttpSecurity http, 
+            PasswordEncoder passwordEncoder, 
             UserDetailsService userDetailsService
     ) throws Exception {
         AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authManagerBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
-        return authManagerBuilder.build();
+                .userDetailsService(userDetailsService) // Serviço que carrega os detalhes do usuário.
+                .passwordEncoder(passwordEncoder); // Codificador de senha (BCrypt, no caso).
+        return authManagerBuilder.build(); // Retorna o AuthenticationManager configurado.
     }
 
+    // Bean que define o PasswordEncoder a ser utilizado (BCryptPasswordEncoder).
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // Retorna o codificador de senha com o algoritmo BCrypt.
     }
 
+    // Bean que configura as regras de segurança para as requisições HTTP.
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .anonymous(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
+                .cors(Customizer.withDefaults()) // Habilita CORS (Cross-Origin Resource Sharing).
+                .csrf(AbstractHttpConfigurer::disable) // Desabilita a proteção CSRF, já que estamos usando JWT.
+                .anonymous(AbstractHttpConfigurer::disable) // Desabilita a configuração de acesso anônimo.
+                .authorizeHttpRequests(authorize -> authorize // Configura as permissões de acesso às rotas.
                         .requestMatchers(
-                                "/api/authenticate",
+                                "/api/authenticate", // Permite acesso sem autenticação a essas rotas.
                                 "/api/register"
                         ).permitAll()
-                        .requestMatchers("/api/user/**").hasAuthority(Role.ADMIN.name())
-                        .anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(handling -> handling
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                        .accessDeniedHandler(new AccessDeniedHandlerImpl()));
-        return http.build();
-
+                        .requestMatchers("/api/user/**").hasAuthority(Role.ADMIN.name()) // Apenas admins podem acessar rotas /api/user/**
+                        .anyRequest().authenticated()) // Exige autenticação para todas as outras requisições.
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Define que não será usada sessão HTTP.
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // Adiciona o filtro JWT antes do filtro de autenticação padrão.
+                .exceptionHandling(handling -> handling // Configura o tratamento de exceções de autenticação e acesso negado.
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // Retorna 401 em caso de falha na autenticação.
+                        .accessDeniedHandler(new AccessDeniedHandlerImpl())); // Retorna 403 em caso de acesso negado.
+        return http.build(); // Retorna a configuração de segurança.
     }
 
+    // Bean que configura as permissões de CORS.
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(allowedOrigins);
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-        configuration.setExposedHeaders(Collections.singletonList("x-auth-token"));
+        configuration.setAllowedOriginPatterns(allowedOrigins); // Configura as origens permitidas para CORS.
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // Permite os métodos HTTP.
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token")); // Permite os cabeçalhos necessários para a API.
+        configuration.setExposedHeaders(Collections.singletonList("x-auth-token")); // Expõe o cabeçalho x-auth-token para o cliente.
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-
+        source.registerCorsConfiguration("/**", configuration); // Aplica a configuração de CORS para todas as rotas.
+        return source; // Retorna a configuração de CORS.
     }
-
-
 }
-
