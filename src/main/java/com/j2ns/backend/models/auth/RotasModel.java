@@ -2,11 +2,12 @@ package com.j2ns.backend.models.auth;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class RotasModel {
 
-	@Column
+	@Id
 	private String nome;
 	
 	@Column
