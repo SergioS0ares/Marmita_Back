@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RotasService {
@@ -35,10 +36,36 @@ public class RotasService {
 
     private Entregador entregador; // Para controlar a quantidade de marmitas do entregador
 
-    public void calcularRotas(List<RotasModel> rotas, Entregador entregador) {
+    public void calcularRotas(List<Map<String, Object>> rotasComCapacidade) {
+        List<RotasModel> rotas = new ArrayList<>();
+        int capacidadeMarmitas = 0;
+
+        // Processar a lista para separar a capacidade e criar os objetos RotasModel
+        for (Map<String, Object> item : rotasComCapacidade) {
+            // Verificar se o item contém a chave "capacidadeMarmitas"
+            if (item.containsKey("capacidadeMarmitas")) {
+                capacidadeMarmitas = (int) item.get("capacidadeMarmitas");
+            } else {
+                // Mapear o objeto para RotasModel
+                RotasModel rota = new RotasModel();
+                rota.setNome((String) item.get("nome"));
+                rota.setLatitude((String) item.get("latitude"));
+                rota.setLongitude((String) item.get("longitude"));
+                rota.setQuantidadeMarmitas((int) item.get("quantidadeMarmitas"));
+                rota.setDistanciaViagem((double) item.get("distanciaViagem"));
+                rota.setTempoViagem((double) item.get("tempoViagem"));
+                rota.setSujestH((String) item.get("sujestH"));
+
+                rotas.add(rota);
+            }
+        }
+
+        // Salvar as rotas processadas e a capacidade do entregador
         this.rotasFront.addAll(rotas);
-        this.entregador = entregador;
+        entregador = new Entregador(); // Criar novo entregador
+        entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
     }
+
 
     public JSONobjectRotas getDestinos() {
         rotasDestinos.clear();
