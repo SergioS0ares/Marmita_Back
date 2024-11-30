@@ -15,60 +15,48 @@ public class RestauranteService {
     @Autowired
     private RestauranteRepository repo;
 
-    
-    
-    
     /**
      * Método para obter as coordenadas do restaurante.
      * Retorna um Optional com o restaurante ou vazio se não encontrar.
      */
     public Optional<RestauranteModel> getCoordenadas() {
-        // Aqui, vamos pegar o primeiro restaurante encontrado. Se houver mais de um, você pode ajustar conforme necessário.
         List<RestauranteModel> restaurantes = repo.findAll();
-        
-        // Se o banco tiver pelo menos um restaurante, retorna o primeiro.
         if (!restaurantes.isEmpty()) {
             return Optional.of(restaurantes.get(0));
         }
-        
-        return Optional.empty();  // Caso não haja nenhum restaurante, retorna Optional vazio.
+        return Optional.empty();
     }
 
-    
-    
-    
     /**
      * Método para atualizar ou salvar o restaurante com as novas coordenadas.
-     * Se já existir um restaurante com a mesma latitude, ele será atualizado.
-     * Caso contrário, será criado um novo.
+     * Se as informações forem diferentes das salvas, deleta tudo e salva o novo restaurante.
+     * Se forem iguais, ignora a requisição.
      */
     public Optional<RestauranteModel> updateCoordenadas(String latitudeRestaurante, String longitudeRestaurante) {
-        // Busca todos os restaurantes
-        List<RestauranteModel> todosRestaurantes = repo.findAll();
-        
-        // Filtra os restaurantes com a mesma latitude (e opcionalmente, longitude)
-        List<RestauranteModel> restaurantesComCoordenadas = todosRestaurantes.stream()
-                .filter(r -> r.getLatitudeRestaurante().equals(latitudeRestaurante))
-                .toList();
-        
-        // Se houver mais de um restaurante com a mesma latitude, vamos apagar todos
-        if (restaurantesComCoordenadas.size() > 1) {
-            repo.deleteAll(restaurantesComCoordenadas);  // Exclui todos os restaurantes encontrados
+        // Busca todos os restaurantes no banco
+        List<RestauranteModel> restaurantes = repo.findAll();
+
+        // Verifica se já existe um restaurante salvo
+        if (!restaurantes.isEmpty()) {
+            RestauranteModel restauranteExistente = restaurantes.get(0);
+
+            // Verifica se as informações são iguais
+            if (restauranteExistente.getLatitudeRestaurante().equals(latitudeRestaurante) &&
+                restauranteExistente.getLongitudeRestaurante().equals(longitudeRestaurante)) {
+                // Se forem iguais, ignora e retorna o restaurante existente
+                return Optional.of(restauranteExistente);
+            }
+
+            // Se forem diferentes, apaga todos os registros
+            repo.deleteAll();
         }
-        
-        // Se encontrar um restaurante com essa latitude, ele será atualizado com a nova longitude
-        if (!restaurantesComCoordenadas.isEmpty()) {
-            RestauranteModel restauranteExistente = restaurantesComCoordenadas.get(0);
-            restauranteExistente.setLongitudeRestaurante(longitudeRestaurante);
-            repo.save(restauranteExistente);  // Atualiza o restaurante existente
-            return Optional.of(restauranteExistente);
-        } else {
-            // Se não existir, cria um novo restaurante
-            RestauranteModel novoRestaurante = new RestauranteModel();
-            novoRestaurante.setLatitudeRestaurante(latitudeRestaurante);
-            novoRestaurante.setLongitudeRestaurante(longitudeRestaurante);
-            repo.save(novoRestaurante);  // Salva o novo restaurante
-            return Optional.of(novoRestaurante);
-        }
+
+        // Salva o novo restaurante com as coordenadas recebidas
+        RestauranteModel novoRestaurante = new RestauranteModel();
+        novoRestaurante.setLatitudeRestaurante(latitudeRestaurante);
+        novoRestaurante.setLongitudeRestaurante(longitudeRestaurante);
+        repo.save(novoRestaurante);
+
+        return Optional.of(novoRestaurante);
     }
 }
