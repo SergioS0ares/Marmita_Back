@@ -1,19 +1,10 @@
 package com.j2ns.backend.models.auth;
 
-import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 @Entity
 public class RotasModel {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
 
 	@Column
 	private String nome;
@@ -36,15 +27,9 @@ public class RotasModel {
 	@Column
 	private String sujestH;
 	
-	@Column
-	private int quantMarmitaEntregador;
-	
 	
 	// metodos
 	
-	public UUID getId() {
-		return id;
-	}
 	
 	public String getNome() {
 		return nome;
@@ -73,15 +58,7 @@ public class RotasModel {
 	public String getSujestH() {
 		return sujestH;
 	}
-	
-	public int getQuantMarmitaEntregador() {
-		return quantMarmitaEntregador;
-	}
-	
-	public void setId(UUID id) {
-		this.id = id;
-	}
-	
+		
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
@@ -110,7 +87,4 @@ public class RotasModel {
 		this.sujestH = sujestH;
 	}
 	
-	public void setQuantMarmitaEntregador(int quantMarmitaEntregador) {
-		this.quantMarmitaEntregador = quantMarmitaEntregador;
-	}
 }
