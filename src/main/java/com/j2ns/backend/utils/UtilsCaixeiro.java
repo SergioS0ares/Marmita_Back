@@ -1,80 +1,81 @@
 package com.j2ns.backend.utils;
 
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 @Service
-public class UtilsCaixeiro {//Aplicação de um projeto de PCV em Codigo Guloso com Metrica principal baseada em Distancia
-
+public class UtilsCaixeiro {
     private static final int CAPACIDADE_MAX = 12; // Capacidade máxima de mercadorias
+    private static final int TEMPO_TOTAL = 240;  // Tempo total disponível (minutos entre 10h e 14h)
 
-    /**
-     * Método para calcular a melhor rota usando uma abordagem gulosa.
-     *
-     * @param todasEntregas Lista de todas as entregas disponíveis.
-     * @return RotaDTO com as entregas selecionadas.
-     */
-    public RotaDTO calcularRota(List<EntregaDTO> todasEntregas) {
-        List<EntregaDTO> rota = new ArrayList<>();
+    public List<RotaDTO> calcularRotas(List<EntregaDTO> todasEntregas) {
+        List<RotaDTO> rotas = new ArrayList<>();
         boolean[] visitado = new boolean[todasEntregas.size()];
-        int totalDistancia = 0;
-        int totalMercadorias = 0;
 
-        // Começa a partir da primeira entrega
-        EntregaDTO entregaAtual = todasEntregas.get(0);
-        rota.add(entregaAtual);
-        visitado[0] = true;
+        int tempoAtual = 0;
+        while (tempoAtual < TEMPO_TOTAL && !todasEntregas.isEmpty()) {
+            List<EntregaDTO> rotaAtual = new ArrayList<>();
+            int mercadoriasCarregadas = 0;
+            EntregaDTO entregaAtual = encontrarEntregaMaisProxima(todasEntregas, null, visitado);
 
-        while (rota.size() < todasEntregas.size()) {
-            int menorDistancia = Integer.MAX_VALUE;
-            EntregaDTO proximaEntrega = null;
-            int indiceProximaEntrega = -1;
+            while (entregaAtual != null && mercadoriasCarregadas < CAPACIDADE_MAX && tempoAtual < TEMPO_TOTAL) {
+                // Adiciona a entrega à rota atual
+                rotaAtual.add(entregaAtual);
+                visitado[todasEntregas.indexOf(entregaAtual)] = true;
+                mercadoriasCarregadas += entregaAtual.getQuantidadeMercadoria();
 
-            // Busca a próxima entrega mais próxima
-            for (int i = 0; i < todasEntregas.size(); i++) {
-                if (!visitado[i]) { // Verifica se a entrega já foi visitada
-                    int distancia = calcularDistanciaEntreDuasEntregas(entregaAtual, todasEntregas.get(i));
-                    if (distancia < menorDistancia) {
-                        menorDistancia = distancia;
-                        proximaEntrega = todasEntregas.get(i);
-                        indiceProximaEntrega = i;
-                    }
+                // Calcula o tempo gasto até a entrega
+                EntregaDTO proximaEntrega = encontrarEntregaMaisProxima(todasEntregas, entregaAtual, visitado);
+                if (proximaEntrega != null) {
+                    tempoAtual += calcularTempoEntreEntregas(entregaAtual, proximaEntrega);
+                }
+
+                entregaAtual = proximaEntrega;
+            }
+
+            // Adiciona a rota atual à lista de rotas
+            rotas.add(new RotaDTO(rotaAtual));
+        }
+        return rotas;
+    }
+
+    private EntregaDTO encontrarEntregaMaisProxima(List<EntregaDTO> entregas, EntregaDTO atual, boolean[] visitado) {
+        int menorDistancia = Integer.MAX_VALUE;
+        EntregaDTO entregaMaisProxima = null;
+
+        for (int i = 0; i < entregas.size(); i++) {
+            if (!visitado[i]) {
+                EntregaDTO entrega = entregas.get(i);
+                int distancia = (atual == null)
+                        ? entrega.getDistancia() // Distância do restaurante
+                        : calcularDistanciaEntreDuasEntregas(atual, entrega);
+
+                if (distancia < menorDistancia) {
+                    menorDistancia = distancia;
+                    entregaMaisProxima = entrega;
                 }
             }
-
-            // Adiciona a entrega mais próxima à rota
-            if (proximaEntrega != null) {
-                rota.add(proximaEntrega);
-                visitado[indiceProximaEntrega] = true;
-                totalDistancia += menorDistancia;
-                entregaAtual = proximaEntrega;
-                totalMercadorias += proximaEntrega.getQuantidadeMercadoria();
-            }
         }
-
-        // Retorna a rota calculada como um RotaDTO
-        return new RotaDTO(rota);
+        return entregaMaisProxima;
     }
 
-    /**
-     * Método auxiliar para calcular a distância entre duas entregas.
-     *
-     * @param e1 Entrega 1.
-     * @param e2 Entrega 2.
-     * @return Distância simulada entre as entregas.
-     */
     private int calcularDistanciaEntreDuasEntregas(EntregaDTO e1, EntregaDTO e2) {
-        return Math.abs(e1.getDistancia() - e2.getDistancia()); // Simulação de distância
+        return (int) Math.sqrt(
+                Math.pow(e1.getLongitude() - e2.getLongitude(), 2) +
+                        Math.pow(e1.getLatitude() - e2.getLatitude(), 2)
+        );
     }
-}//Aplicação de um projeto de PCV em Codigo Guloso
+
+    private int calcularTempoEntreEntregas(EntregaDTO e1, EntregaDTO e2) {
+        // Suponha uma velocidade fixa para simplificar
+        return calcularDistanciaEntreDuasEntregas(e1, e2) / 10; // Velocidade fictícia
+    }
+}
 
 
-
-
-
-
+/*						Temos aqui, um fóssil do q um dia foi um código dinamico							*/
 
 /*Caixeiro viajante Dianmico Caso nao seja no padrao Guloso.*/
 
