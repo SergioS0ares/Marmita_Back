@@ -14,11 +14,15 @@ import com.j2ns.backend.models.auth.UserAccountModel;
 @Service
 public class AuthenticationUseCaseImpl implements AuthenticationUseCase {
 
-    private final UserDetailsService userDetailsService;
-    private final AuthenticationManager authenticationManager;
-    private final AuthenticationService authenticationService;
+    // Dependências necessárias para autenticação.
+    private final UserDetailsService userDetailsService; // Serviço para carregar os detalhes do usuário.
+    private final AuthenticationManager authenticationManager; // Gerenciador de autenticação do Spring Security.
+    private final AuthenticationService authenticationService; // Serviço customizado para manipular a resposta de autenticação.
 
-    public AuthenticationUseCaseImpl(UserDetailsService userDetailsService, AuthenticationManager authenticationManager, AuthenticationService authenticationService) {
+    // Construtor que inicializa as dependências via injeção de dependência.
+    public AuthenticationUseCaseImpl(UserDetailsService userDetailsService, 
+                                      AuthenticationManager authenticationManager, 
+                                      AuthenticationService authenticationService) {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.authenticationService = authenticationService;
@@ -26,11 +30,17 @@ public class AuthenticationUseCaseImpl implements AuthenticationUseCase {
 
     @Override
     public AuthenticationResponseModel authenticate(AuthenticationRequestModel authenticationRequestModel) {
-        final UserAccountModel userDetails = (UserAccountModel) userDetailsService.loadUserByUsername(authenticationRequestModel.username);
+        // Carrega os detalhes do usuário com base no nome de usuário recebido na requisição.
+        final UserAccountModel userDetails = 
+            (UserAccountModel) userDetailsService.loadUserByUsername(authenticationRequestModel.username);
+        
+        // Realiza a autenticação com as credenciais fornecidas.
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                authenticationRequestModel.username,
-                authenticationRequestModel.password
+                authenticationRequestModel.username, // Nome de usuário recebido na requisição.
+                authenticationRequestModel.password  // Senha recebida na requisição.
         ));
+        
+        // Gera e retorna uma resposta de autenticação usando o serviço customizado.
         return authenticationService.getAuthenticationResponseFromUser(userDetails);
     }
 }
