@@ -1,7 +1,6 @@
 package com.j2ns.backend.controllers.auth;
 
 import com.j2ns.backend.config.JSONObjectRotasFront;
-import com.j2ns.backend.config.JSONobjectRotas;
 import com.j2ns.backend.models.auth.RotasModel;
 import com.j2ns.backend.services.auth.RotasService;
 
