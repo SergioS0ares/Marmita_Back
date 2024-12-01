@@ -1,6 +1,7 @@
 package com.j2ns.backend.services.auth;
 
 import com.j2ns.backend.config.Entregador;
+import com.j2ns.backend.config.JSONObjectRotasFront;
 import com.j2ns.backend.config.JSONobjectRotas;
 import com.j2ns.backend.mocks.TesteEntity;
 import com.j2ns.backend.mocks.TesteRepository;
@@ -97,8 +98,10 @@ public class RotasService {
     }
 
 
+    
 
-    public JSONobjectRotas getDestinos() {
+    public List<JSONObjectRotasFront> getDestinos() {
+        List<JSONObjectRotasFront> destinosAdaptados = new ArrayList<>();
         rotasDestinos.clear();
 
         // Obter o restaurante da base de dados
@@ -120,12 +123,11 @@ public class RotasService {
         double somaTempo = menorDistancia.getTempoViagem();
         int capacidadeEntregador = entregador.getQuantMarmitaEntregador();
 
-        // Verificar se a quantidade de marmitas excede a capacidade do entregador
         if (capacidadeEntregador < menorDistancia.getQuantidadeMarmitas()) {
             int restanteMarmitas = menorDistancia.getQuantidadeMarmitas() - capacidadeEntregador;
             menorDistancia.setQuantidadeMarmitas(capacidadeEntregador);
             entregador.setQuantMarmitaEntregador(0); // Zera as marmitas no entregador
-            rotasFinal.add(restauranteRota); // Adiciona o restaurante no início
+            rotasFinal.add(restauranteRota); // Adiciona o restaurante
             rotasFinal.add(menorDistancia); // Adiciona o destino com marmitas entregues
 
             // Cria o ponto incompleto para retorno futuro
@@ -139,8 +141,25 @@ public class RotasService {
             rotasFinal.add(restauranteRota); // Adiciona o restaurante
             rotasFinal.add(menorDistancia); // Adiciona o destino com menor distância
         }
-        return new JSONobjectRotas(rotasDestinos, entregador.getQuantMarmitaEntregador());
+
+        // Adaptar as rotas para JSONObjectRotasFront
+        for (RotasModel rota : rotasDestinos) {
+            JSONObjectRotasFront jsonRota = new JSONObjectRotasFront();
+            jsonRota.setNome(rota.getNome());
+            jsonRota.setLatitude(rota.getLatitude());
+            jsonRota.setLongitude(rota.getLongitude());
+            jsonRota.setQuantidadeMarmitas(rota.getQuantidadeMarmitas());
+            jsonRota.setDistanciaViagem(rota.getDistanciaViagem());
+            jsonRota.setTempoViagem(rota.getTempoViagem());
+            jsonRota.setSujestH(rota.getSujestH());
+            jsonRota.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador()); // Inclui a capacidade restante
+
+            destinosAdaptados.add(jsonRota);
+        }
+
+        return destinosAdaptados;
     }
+
 
 
     public List<RotasModel> getRotas() {

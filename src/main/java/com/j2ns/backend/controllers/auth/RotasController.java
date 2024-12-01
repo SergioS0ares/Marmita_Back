@@ -20,7 +20,7 @@ public class RotasController {
     private RotasService serv;
 
     // Requisição POST para calcular as rotas com uma lista de RotasModel e dados do Entregador
-    @PostMapping("/rotas")
+    @PostMapping("/calcularRotas")
     public ResponseEntity<Void> receberRotas(@RequestBody List<Map<String, Object>> rotasComCapacidade) {
         try {
             serv.calcularRotas(rotasComCapacidade);
