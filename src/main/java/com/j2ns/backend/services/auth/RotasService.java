@@ -2,6 +2,8 @@ package com.j2ns.backend.services.auth;
 
 import com.j2ns.backend.config.Entregador;
 import com.j2ns.backend.config.JSONobjectRotas;
+import com.j2ns.backend.mocks.TesteEntity;
+import com.j2ns.backend.mocks.TesteRepository;
 import com.j2ns.backend.models.auth.RotasModel;
 import com.j2ns.backend.models.auth.TrajetoModel;
 import com.j2ns.backend.models.auth.RestauranteModel;
@@ -28,6 +30,9 @@ public class RotasService {
     
     @Autowired
     private TrajetoRepository trajRepo;
+    
+    @Autowired
+    private TesteRepository testRepo;
 
     private List<RotasModel> rotasFront = new ArrayList<>();
     private List<RotasModel> rotasDestinos = new ArrayList<>();
@@ -56,12 +61,24 @@ public class RotasService {
                 rota.setTempoViagem((double) item.get("tempoViagem"));
                 rota.setSujestH((String) item.get("sujestH"));
 
-                // Adicionando print para logar o objeto sendo inserido
-                System.out.println("Adicionando rota ao log: " + rota.toString());
+                // Salvar no banco de dados
+                salvarRotaNoBanco(rota);
 
                 rotas.add(rota);
             }
         }
+    }
+
+    private void salvarRotaNoBanco(RotasModel rota) {
+        // Apagar todos os registros existentes
+        testRepo.deleteAll();
+
+        // Criar uma nova entidade para salvar
+        TesteEntity testeEntity = new TesteEntity();
+        testeEntity.setMsg(rota.getNome());
+
+        // Salvar a entidade no banco de dados
+        testRepo.save(testeEntity);
     }
 
 
