@@ -66,13 +66,14 @@ public class RotasService {
                 rotas.add(rota);
             }
             
-            salvarRotaNoBanco();
         }
 
         // Salvar as rotas processadas e a capacidade do entregador
         this.rotasFront.addAll(rotas);
         entregador = new Entregador(); // Criar novo entregador
         entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
+        
+        salvarRotaNoBanco();
     }
     
     private void salvarRotaNoBanco() {
@@ -81,7 +82,7 @@ public class RotasService {
 
         // Criar uma nova entidade para salvar
         TesteEntity testeEntity = new TesteEntity();
-        testeEntity.setMsg("");
+        testeEntity.setMsg(rotasFront.getFirst().getNome());
         testeEntity.setMsg("" + entregador.getQuantMarmitaEntregador());
 
         // Salvar a entidade no banco de dados
