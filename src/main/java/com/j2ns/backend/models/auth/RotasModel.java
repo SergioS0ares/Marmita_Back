@@ -36,6 +36,8 @@ public class RotasModel {
 
     @Column
     private String sujestH;
+    
+    
 
     // Métodos getters e setters
 

@@ -2,6 +2,8 @@ package com.j2ns.backend.services.auth;
 
 import com.j2ns.backend.config.Entregador;
 import com.j2ns.backend.config.JSONobjectRotas;
+import com.j2ns.backend.mocks.TesteEntity;
+import com.j2ns.backend.mocks.TesteRepository;
 import com.j2ns.backend.models.auth.RotasModel;
 import com.j2ns.backend.models.auth.TrajetoModel;
 import com.j2ns.backend.models.auth.RestauranteModel;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RotasService {
@@ -27,18 +30,73 @@ public class RotasService {
     
     @Autowired
     private TrajetoRepository trajRepo;
+    
+    @Autowired
+    private TesteRepository testRepo;
 
     private List<RotasModel> rotasFront = new ArrayList<>();
     private List<RotasModel> rotasDestinos = new ArrayList<>();
     private List<RotasModel> rotasFinal = new ArrayList<>();
+    private List<Map<String, Object>> listTeste = new ArrayList<>();
     private static final int TEMPO_MAXIMO = 240;
 
     private Entregador entregador; // Para controlar a quantidade de marmitas do entregador
 
-    public void calcularRotas(List<RotasModel> rotas, Entregador entregador) {
+    public void calcularRotas(List<Map<String, Object>> rotasComCapacidade) {
+        List<RotasModel> rotas = new ArrayList<>();
+        int capacidadeMarmitas = 0;
+
+        // Processar a lista para separar a capacidade e criar os objetos RotasModel
+        for (Map<String, Object> item : rotasComCapacidade) {
+            // Capturar capacidade de marmitas se disponível
+            if (item.containsKey("capacidadeMarmitas")) {
+                capacidadeMarmitas = (int) item.get("capacidadeMarmitas");
+            }
+
+            // Mapear o restante do objeto para RotasModel
+            RotasModel rota = new RotasModel();
+            rota.setNome((String) item.get("nome"));
+            rota.setLatitude((String) item.get("latitude"));
+            rota.setLongitude((String) item.get("longitude"));
+            rota.setQuantidadeMarmitas((int) item.get("quantidadeMarmitas"));
+            rota.setDistanciaViagem((double) item.get("distanciaViagem"));
+            rota.setTempoViagem((double) item.get("tempoViagem"));
+            rota.setSujestH((String) item.get("sujestH"));
+
+            rotas.add(rota);
+        }
+
+        // Salvar as rotas processadas e a capacidade do entregador
         this.rotasFront.addAll(rotas);
-        this.entregador = entregador;
+        entregador = new Entregador(); // Criar novo entregador
+        entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
+
+        salvarRotaNoBanco();
     }
+
+    
+    private void salvarRotaNoBanco() {
+        // Apagar todos os registros existentes
+        testRepo.deleteAll();
+
+        // Criar uma nova entidade para salvar
+        TesteEntity testeEntity = new TesteEntity();
+
+        if (!rotasFront.isEmpty()) {
+            testeEntity.setMsg(rotasFront.get(0).getNome());
+        } else {
+            testeEntity.setMsg("Nenhuma rota disponível");
+        }
+
+        testeEntity.setMsg(testeEntity.getMsg() + "/ / /" + entregador.getQuantMarmitaEntregador());
+        
+        testeEntity.setMsg(testeEntity.getMsg() + "/ / /" + listTeste.size());
+
+        // Salvar a entidade no banco de dados
+        testRepo.save(testeEntity);
+    }
+
+
 
     public JSONobjectRotas getDestinos() {
         rotasDestinos.clear();
