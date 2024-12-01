@@ -43,40 +43,37 @@ public class RotasService {
     private Entregador entregador; // Para controlar a quantidade de marmitas do entregador
 
     public void calcularRotas(List<Map<String, Object>> rotasComCapacidade) {
-    	listTeste = rotasComCapacidade;
         List<RotasModel> rotas = new ArrayList<>();
         int capacidadeMarmitas = 0;
 
         // Processar a lista para separar a capacidade e criar os objetos RotasModel
         for (Map<String, Object> item : rotasComCapacidade) {
-            // Verificar se o item contém a chave "capacidadeMarmitas"
+            // Capturar capacidade de marmitas se disponível
             if (item.containsKey("capacidadeMarmitas")) {
                 capacidadeMarmitas = (int) item.get("capacidadeMarmitas");
-            } else {
-                // Mapear o objeto para RotasModel
-                RotasModel rota = new RotasModel();
-                rota.setNome((String) item.get("nome"));
-                rota.setLatitude((String) item.get("latitude"));
-                rota.setLongitude((String) item.get("longitude"));
-                rota.setQuantidadeMarmitas((int) item.get("quantidadeMarmitas"));
-                rota.setDistanciaViagem((double) item.get("distanciaViagem"));
-                rota.setTempoViagem((double) item.get("tempoViagem"));
-                rota.setSujestH((String) item.get("sujestH"));
-
-                // insira aqui
-                
-                rotas.add(rota);
             }
-            
+
+            // Mapear o restante do objeto para RotasModel
+            RotasModel rota = new RotasModel();
+            rota.setNome((String) item.get("nome"));
+            rota.setLatitude((String) item.get("latitude"));
+            rota.setLongitude((String) item.get("longitude"));
+            rota.setQuantidadeMarmitas((int) item.get("quantidadeMarmitas"));
+            rota.setDistanciaViagem((double) item.get("distanciaViagem"));
+            rota.setTempoViagem((double) item.get("tempoViagem"));
+            rota.setSujestH((String) item.get("sujestH"));
+
+            rotas.add(rota);
         }
 
         // Salvar as rotas processadas e a capacidade do entregador
         this.rotasFront.addAll(rotas);
         entregador = new Entregador(); // Criar novo entregador
         entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
-        
+
         salvarRotaNoBanco();
     }
+
     
     private void salvarRotaNoBanco() {
         // Apagar todos os registros existentes
