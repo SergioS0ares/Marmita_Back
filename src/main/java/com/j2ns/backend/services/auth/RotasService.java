@@ -61,26 +61,32 @@ public class RotasService {
                 rota.setTempoViagem((double) item.get("tempoViagem"));
                 rota.setSujestH((String) item.get("sujestH"));
 
-                // Salvar no banco de dados
-                salvarRotaNoBanco(rota);
-
+                // insira aqui
+                
                 rotas.add(rota);
             }
+            
+            salvarRotaNoBanco();
         }
-    }
 
-    private void salvarRotaNoBanco(RotasModel rota) {
+        // Salvar as rotas processadas e a capacidade do entregador
+        this.rotasFront.addAll(rotas);
+        entregador = new Entregador(); // Criar novo entregador
+        entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
+    }
+    
+    private void salvarRotaNoBanco() {
         // Apagar todos os registros existentes
         testRepo.deleteAll();
 
         // Criar uma nova entidade para salvar
         TesteEntity testeEntity = new TesteEntity();
-        testeEntity.setMsg(rota.getNome());
+        testeEntity.setMsg("");
+        testeEntity.setMsg("" + entregador.getQuantMarmitaEntregador());
 
         // Salvar a entidade no banco de dados
         testRepo.save(testeEntity);
     }
-
 
 
     public JSONobjectRotas getDestinos() {
