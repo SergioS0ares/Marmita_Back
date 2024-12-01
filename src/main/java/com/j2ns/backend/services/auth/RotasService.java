@@ -82,12 +82,19 @@ public class RotasService {
 
         // Criar uma nova entidade para salvar
         TesteEntity testeEntity = new TesteEntity();
-        testeEntity.setMsg(rotasFront.getFirst().getNome());
+
+        if (!rotasFront.isEmpty()) {
+            testeEntity.setMsg(rotasFront.get(0).getNome());
+        } else {
+            testeEntity.setMsg("Nenhuma rota disponível");
+        }
+
         testeEntity.setMsg("" + entregador.getQuantMarmitaEntregador());
 
         // Salvar a entidade no banco de dados
         testRepo.save(testeEntity);
     }
+
 
 
     public JSONobjectRotas getDestinos() {
