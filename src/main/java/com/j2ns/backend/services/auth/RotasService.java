@@ -56,15 +56,14 @@ public class RotasService {
                 rota.setTempoViagem((double) item.get("tempoViagem"));
                 rota.setSujestH((String) item.get("sujestH"));
 
+                // Adicionando print para logar o objeto sendo inserido
+                System.out.println("Adicionando rota ao log: " + rota.toString());
+
                 rotas.add(rota);
             }
         }
-
-        // Salvar as rotas processadas e a capacidade do entregador
-        this.rotasFront.addAll(rotas);
-        entregador = new Entregador(); // Criar novo entregador
-        entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
     }
+
 
 
     public JSONobjectRotas getDestinos() {

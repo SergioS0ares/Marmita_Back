@@ -36,6 +36,23 @@ public class RotasModel {
 
     @Column
     private String sujestH;
+    
+    
+    @Override
+    public String toString() {
+        return "RotasModel{" +
+                "nome='" + nome + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", quantidadeMarmitas=" + quantidadeMarmitas +
+                ", distanciaViagem=" + distanciaViagem +
+                ", tempoViagem=" + tempoViagem +
+                ", sujestH='" + sujestH + '\'' +
+                '}';
+    }
+
+    
+    
 
     // Métodos getters e setters
 
