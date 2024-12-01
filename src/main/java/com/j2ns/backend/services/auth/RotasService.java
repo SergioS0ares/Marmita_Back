@@ -114,39 +114,41 @@ public class RotasService {
         // Ordenar rotas pela menor distância
         rotasFront.sort(Comparator.comparingDouble(RotasModel::getDistanciaViagem));
 
-        // Variáveis auxiliares
-        double somaTempo = 0;
-        int capacidadeEntregador = entregador.getQuantMarmitaEntregador();
+        // Encontrar o próximo destino dentro do limite de tempo
+        RotasModel destinoAtual = null;
+        double tempoTotal = 0;
 
-        // Lógica principal de entrega
         for (RotasModel rota : rotasFront) {
-            if (capacidadeEntregador <= 0 || somaTempo >= TEMPO_MAXIMO) {
-                // Se não houver capacidade ou tempo excedido, finaliza retornando apenas o restaurante
-                rotasDestinos.add(restauranteRota);
+            tempoTotal += rota.getTempoViagem();
+            if (tempoTotal <= TEMPO_MAXIMO) {
+                destinoAtual = rota;
                 break;
             }
-
-            // Quantidade de marmitas a entregar
-            int marmitasEntregues = Math.min(capacidadeEntregador, rota.getQuantidadeMarmitas());
-            rota.setQuantidadeMarmitas(rota.getQuantidadeMarmitas() - marmitasEntregues);
-            capacidadeEntregador -= marmitasEntregues;
-
-            // Atualiza o tempo de entrega
-            somaTempo += rota.getTempoViagem();
-
-            // Adiciona a rota ao destino
-            rotasDestinos.add(rota);
-
-            // Se o destino ainda tiver marmitas pendentes, adiciona o restaurante para retorno
-            if (rota.getQuantidadeMarmitas() > 0) {
-                rotasDestinos.add(restauranteRota);
-            }
         }
 
-        // Caso nenhuma entrega tenha sido realizada ou capacidade esteja esgotada
-        if (rotasDestinos.isEmpty() || capacidadeEntregador == 0) {
-            rotasDestinos.add(restauranteRota);
+        // Se não houver um destino válido, retorne lista vazia
+        if (destinoAtual == null) {
+            return destinosAdaptados; 
         }
+
+        // Calcular marmitas entregues
+        int marmitasEntregues = Math.min(entregador.getQuantMarmitaEntregador(), destinoAtual.getQuantidadeMarmitas());
+        destinoAtual.setQuantidadeMarmitas(destinoAtual.getQuantidadeMarmitas() - marmitasEntregues);
+        entregador.setQuantMarmitaEntregador(entregador.getQuantMarmitaEntregador() - marmitasEntregues);
+
+        // Adicionar o destino atual em primeiro lugar
+        rotasDestinos.add(destinoAtual);
+
+        // Remover ou atualizar o destino na lista original
+        if (destinoAtual.getQuantidadeMarmitas() > 0) {
+            rotasFront.remove(destinoAtual);
+            rotasFront.add(0, destinoAtual); // Reinsere no início para manter prioridade
+        } else {
+            rotasFront.remove(destinoAtual);
+        }
+
+        // Adicionar os destinos restantes
+        rotasDestinos.addAll(rotasFront);
 
         // Adaptar as rotas para JSONObjectRotasFront
         for (RotasModel rota : rotasDestinos) {
@@ -158,13 +160,15 @@ public class RotasService {
             jsonRota.setDistanciaViagem(rota.getDistanciaViagem());
             jsonRota.setTempoViagem(rota.getTempoViagem());
             jsonRota.setSujestH(rota.getSujestH());
-            jsonRota.setCapacidadeMarmitas(capacidadeEntregador); // Inclui a capacidade restante
+            jsonRota.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador()); // Capacidade atualizada
 
             destinosAdaptados.add(jsonRota);
         }
 
         return destinosAdaptados;
     }
+
+
 
 
 
