@@ -93,7 +93,7 @@ public class RotasService {
 
         testeEntity.setMsg(testeEntity.getMsg() + "/ / /" + entregador.getQuantMarmitaEntregador());
         
-        testeEntity.setMsg(testeEntity.getMsg() + "/ / /" + listTeste);
+        testeEntity.setMsg(testeEntity.getMsg() + "/ / /" + listTeste.size());
 
         // Salvar a entidade no banco de dados
         testRepo.save(testeEntity);
