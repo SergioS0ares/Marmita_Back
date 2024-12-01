@@ -37,11 +37,13 @@ public class RotasService {
     private List<RotasModel> rotasFront = new ArrayList<>();
     private List<RotasModel> rotasDestinos = new ArrayList<>();
     private List<RotasModel> rotasFinal = new ArrayList<>();
+    private List<Map<String, Object>> listTeste = new ArrayList<>();
     private static final int TEMPO_MAXIMO = 240;
 
     private Entregador entregador; // Para controlar a quantidade de marmitas do entregador
 
     public void calcularRotas(List<Map<String, Object>> rotasComCapacidade) {
+    	listTeste = rotasComCapacidade;
         List<RotasModel> rotas = new ArrayList<>();
         int capacidadeMarmitas = 0;
 
@@ -89,7 +91,9 @@ public class RotasService {
             testeEntity.setMsg("Nenhuma rota disponível");
         }
 
-        testeEntity.setMsg("" + entregador.getQuantMarmitaEntregador());
+        testeEntity.setMsg(testeEntity.getMsg() + "/ / /" + entregador.getQuantMarmitaEntregador());
+        
+        testeEntity.setMsg(testeEntity.getMsg() + "/ / /" + listTeste);
 
         // Salvar a entidade no banco de dados
         testRepo.save(testeEntity);
