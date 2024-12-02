@@ -151,12 +151,18 @@ public class RotasService {
     }
 
     public List<RotasModel> getRotas() {
-        // Utilizar lista1 em vez de acessar o banco diretamente
+        // Reanexar entidades "detached" ao contexto do Hibernate
+        List<RotasModel> rotasGerenciadas = rotaRepo.saveAll(lista1);
+
+        // Criar o TrajetoModel com as rotas gerenciadas
         TrajetoModel trajeto = new TrajetoModel();
-        trajeto.setRotas(lista1);
+        trajeto.setRotas(rotasGerenciadas); // Usar entidades gerenciadas pelo contexto
         trajeto.setTotalMarmitasEntregues(entregador.getQuantMarmitaEntregador());
+
+        // Salvar o trajeto no banco
         trajRepo.save(trajeto);
 
         return lista1;
     }
+
 }
