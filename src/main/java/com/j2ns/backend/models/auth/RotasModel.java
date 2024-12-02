@@ -122,4 +122,19 @@ public class RotasModel {
     public void setSujestH(String sujestH) {
         this.sujestH = sujestH;
     }
+
+    public void setId(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("A ID não pode ser nula ou vazia.");
+        }
+
+        // Verificar se a string é um UUID válido
+        try {
+            UUID stringId = UUID.fromString(id); // Tenta criar um UUID com a string fornecida
+            this.id = stringId;       // Se for válido, define a ID
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("A ID fornecida não é válida. Deve estar no formato de um UUID.");
+        }
+    }
+
 }
