@@ -41,25 +41,24 @@ public class RotasService {
     private Entregador entregador;
 
     public void calcularRotas(List<Map<String, Object>> rotasComCapacidade) {
-        // Salvar a lista recebida no banco
         List<RotasModel> rotas = new ArrayList<>();
         int capacidadeMarmitas = 0;
 
         for (Map<String, Object> item : rotasComCapacidade) {
             if (item.containsKey("capacidadeMarmitas")) {
-                capacidadeMarmitas = (int) item.get("capacidadeMarmitas");
+                capacidadeMarmitas = (int) item.getOrDefault("capacidadeMarmitas", 0);
             }
 
             RotasModel rota = new RotasModel();
             rota.setNome((String) item.get("nome"));
             rota.setLatitude((String) item.get("latitude"));
             rota.setLongitude((String) item.get("longitude"));
-            rota.setQuantidadeMarmitas((int) item.get("quantidadeMarmitas"));
-            rota.setDistanciaViagem((double) item.get("distanciaViagem"));
-            rota.setTempoViagem((double) item.get("tempoViagem"));
+            rota.setQuantidadeMarmitas((int) item.getOrDefault("quantidadeMarmitas", 0));
+            rota.setDistanciaViagem(((Number) item.getOrDefault("distanciaViagem", 0.0)).doubleValue());
+            rota.setTempoViagem(((Number) item.getOrDefault("tempoViagem", 0.0)).doubleValue());
             rota.setSujestH((String) item.get("sujestH"));
 
-            // Geração de IDs aleatórios no momento de criação
+            // Gera ID se não existir
             if (rota.getId() == null) {
                 rota.setId(UUID.randomUUID().toString());
             }
@@ -67,30 +66,23 @@ public class RotasService {
             rotas.add(rota);
         }
 
-        // Salvar elementos no banco
+        // Salvar no banco
         rotaRepo.saveAll(rotas);
-        
-        for(int i = 0; i <= rotas.size(); i++) {
-        	if(rotas.get(i).getId() == null) {
-        		TesteEntity ent = new TesteEntity();
-        		ent.setMsg("nao foi");
-        		testRepo.save(ent);
-        	} else {
-        		TesteEntity ent = new TesteEntity();
-        		ent.setMsg("foi assim: " + ent.getMsg());
-        		testRepo.save(ent);
-        	}
+
+        // Teste adicional para salvar mensagens
+        for (RotasModel rota : rotas) {
+            TesteEntity ent = new TesteEntity();
+            ent.setMsg("ID salvo: " + rota.getId());
+            testRepo.save(ent);
         }
 
-        // Recuperar todos os elementos do banco e armazená-los em lista1
         lista1 = rotaRepo.findAll();
-
-        // Apagar os elementos do banco para evitar duplicações
         rotaRepo.deleteAll();
 
         entregador = new Entregador();
         entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
     }
+
 
 
     public List<JSONObjectRotasFront> getDestinos() {
