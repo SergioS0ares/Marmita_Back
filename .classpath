@@ -36,5 +36,15 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/julio/.m2/repository/org/springframework/boot/spring-boot-test/3.2.5/spring-boot-test-3.2.5.jar" sourcepath="C:/Users/julio/.m2/repository/org/springframework/boot/spring-boot-test/3.2.5/spring-boot-test-3.2.5-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+			<attribute name="maven.groupId" value="org.springframework.boot"/>
+			<attribute name="maven.artifactId" value="spring-boot-test"/>
+			<attribute name="maven.version" value="3.2.5"/>
+			<attribute name="maven.scope" value="test"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

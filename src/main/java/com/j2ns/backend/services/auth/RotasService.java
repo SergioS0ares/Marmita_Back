@@ -2,6 +2,8 @@ package com.j2ns.backend.services.auth;
 
 import com.j2ns.backend.config.Entregador;
 import com.j2ns.backend.config.JSONObjectRotasFront;
+import com.j2ns.backend.mocks.TesteEntity;
+import com.j2ns.backend.mocks.TesteRepository;
 import com.j2ns.backend.models.auth.RotasModel;
 import com.j2ns.backend.models.auth.TrajetoModel;
 import com.j2ns.backend.models.auth.RestauranteModel;
@@ -29,6 +31,9 @@ public class RotasService {
 
     @Autowired
     private TrajetoRepository trajRepo;
+    
+    @Autowired
+    private TesteRepository testRepo;
 
     private List<RotasModel> lista1 = new ArrayList<>();
     private static final int TEMPO_MAXIMO = 240;
@@ -54,23 +59,31 @@ public class RotasService {
             rota.setTempoViagem((double) item.get("tempoViagem"));
             rota.setSujestH((String) item.get("sujestH"));
 
-            rotas.add(rota);
-        }
-
-        rotaRepo.saveAll(rotas);
-
-        // Recuperar todos os elementos do banco e armazená-los em lista1
-        lista1 = rotaRepo.findAll();
-
-        // Gerar IDs aleatórios para elementos sem ID
-        lista1.forEach(rota -> {
+            // Geração de IDs aleatórios no momento de criação
             if (rota.getId() == null) {
                 rota.setId(UUID.randomUUID().toString());
             }
-        });
 
-        // Salvar novamente no banco caso IDs tenham sido gerados
-        rotaRepo.saveAll(lista1);
+            rotas.add(rota);
+        }
+
+        // Salvar elementos no banco
+        rotaRepo.saveAll(rotas);
+        
+        for(int i = 0; i <= rotas.size(); i++) {
+        	if(rotas.get(i).getId() == null) {
+        		TesteEntity ent = new TesteEntity();
+        		ent.setMsg("nao foi");
+        		testRepo.save(ent);
+        	} else {
+        		TesteEntity ent = new TesteEntity();
+        		ent.setMsg("foi assim: " + ent.getMsg());
+        		testRepo.save(ent);
+        	}
+        }
+
+        // Recuperar todos os elementos do banco e armazená-los em lista1
+        lista1 = rotaRepo.findAll();
 
         // Apagar os elementos do banco para evitar duplicações
         rotaRepo.deleteAll();
@@ -78,6 +91,7 @@ public class RotasService {
         entregador = new Entregador();
         entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
     }
+
 
     public List<JSONObjectRotasFront> getDestinos() {
         // Utilizar lista1 em vez de acessar o banco diretamente
