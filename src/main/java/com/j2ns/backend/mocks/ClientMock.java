@@ -13,7 +13,29 @@ public class ClientMock {
     /* Essa classe foi criada para gerar objetos de teste (mocks) da classe ClientModel.
      * É útil para testar a requisição de clientes sem depender de dados reais. 
      * Ela preenche os campos da classe ClientModel com dados aleatórios para fins de teste.
-     * */
+     */
+
+    // Método que gera uma latitude dentro de Goiânia ou Brasil.
+    private static double generateLatitude(boolean isGoiania) {
+        if (isGoiania) {
+            // Limites de Goiânia
+            return -16.744 + (random.nextDouble() * (-16.564 - (-16.744)));
+        } else {
+            // Limites do Brasil
+            return -33.75 + (random.nextDouble() * (5.27 - (-33.75)));
+        }
+    }
+
+    // Método que gera uma longitude dentro de Goiânia ou Brasil.
+    private static double generateLongitude(boolean isGoiania) {
+        if (isGoiania) {
+            // Limites de Goiânia
+            return -49.375 + (random.nextDouble() * (-49.098 - (-49.375)));
+        } else {
+            // Limites do Brasil
+            return -73.99 + (random.nextDouble() * (-34.79 - (-73.99)));
+        }
+    }
 
     // Método estático que gera um mock de um cliente.
     public static ClientModel generateMockClient() {
@@ -25,8 +47,12 @@ public class ClientMock {
         client.setDescricaoEndereco(faker.address().fullAddress()); // Gera um endereço aleatório.
         client.setQuantPedido(faker.number().numberBetween(1, 50)); // Gera um número aleatório de pedidos entre 1 e 50.
         client.setTelefone(faker.phoneNumber().phoneNumber()); // Gera um número de telefone aleatório.
-        client.setLatitude(faker.address().latitude()); // Gera uma latitude aleatória para a localização.
-        client.setLongitude(faker.address().longitude()); // Gera uma longitude aleatória para a localização.
+
+        // Define se as coordenadas devem ser de Goiânia.
+        boolean isGoiania = true;
+
+        client.setLatitude(String.valueOf(generateLatitude(isGoiania))); // Gera latitude.
+        client.setLongitude(String.valueOf(generateLongitude(isGoiania))); // Gera longitude.
         client.setSujestH(generateRandomTimeRange()); // Gera um horário aleatório no formato "HH:MM - HH:MM".
 
         return client; // Retorna o objeto ClientModel preenchido com dados aleatórios.
