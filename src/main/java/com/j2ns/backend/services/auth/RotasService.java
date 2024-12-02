@@ -28,33 +28,31 @@ public class RotasService {
 
     @Autowired
     private RotasRepository rotaRepo;
-    
+
     @Autowired
     private TrajetoRepository trajRepo;
-    
+
     @Autowired
     private TesteRepository testRepo;
 
     private List<RotasModel> rotasFront = new ArrayList<>();
     private List<RotasModel> rotasDestinos = new ArrayList<>();
     private List<RotasModel> rotasFinal = new ArrayList<>();
-    private List<Map<String, Object>> listTeste = new ArrayList<>();
     private static final int TEMPO_MAXIMO = 240;
 
-    private Entregador entregador; // Para controlar a quantidade de marmitas do entregador
+    private Entregador entregador;
 
     public void calcularRotas(List<Map<String, Object>> rotasComCapacidade) {
+        rotaRepo.deleteAll(); // Apagar todas as rotas do banco antes de salvar novas
+
         List<RotasModel> rotas = new ArrayList<>();
         int capacidadeMarmitas = 0;
 
-        // Processar a lista para separar a capacidade e criar os objetos RotasModel
         for (Map<String, Object> item : rotasComCapacidade) {
-            // Capturar capacidade de marmitas se disponível
             if (item.containsKey("capacidadeMarmitas")) {
                 capacidadeMarmitas = (int) item.get("capacidadeMarmitas");
             }
 
-            // Mapear o restante do objeto para RotasModel
             RotasModel rota = new RotasModel();
             rota.setNome((String) item.get("nome"));
             rota.setLatitude((String) item.get("latitude"));
@@ -67,58 +65,37 @@ public class RotasService {
             rotas.add(rota);
         }
 
-        // Salvar as rotas processadas e a capacidade do entregador
         this.rotasFront.addAll(rotas);
-        entregador = new Entregador(); // Criar novo entregador
+        entregador = new Entregador();
         entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
 
-        salvarRotaNoBanco();
+        rotaRepo.saveAll(rotasFront); // Salvar a lista no banco
+        rotasFront.clear(); // Limpar a lista após salvar
     }
-
-    
-    private void salvarRotaNoBanco() {
-        // Apagar todos os registros existentes
-        testRepo.deleteAll();
-
-        // Criar uma nova entidade para salvar
-        TesteEntity testeEntity = new TesteEntity();
-
-        if (!rotasFront.isEmpty()) {
-            testeEntity.setMsg(rotasFront.get(0).getNome());
-        } else {
-            testeEntity.setMsg("Nenhuma rota disponível");
-        }
-
-        testeEntity.setMsg(testeEntity.getMsg() + "/ / /" + entregador.getQuantMarmitaEntregador());
-        
-        testeEntity.setMsg(testeEntity.getMsg() + "/ / /" + listTeste.size());
-
-        // Salvar a entidade no banco de dados
-        testRepo.save(testeEntity);
-    }
-
-
-    
 
     public List<JSONObjectRotasFront> getDestinos() {
+        rotaRepo.deleteAll(); // Apagar as rotas existentes antes de salvar novamente no banco
+
         List<JSONObjectRotasFront> destinosAdaptados = new ArrayList<>();
         rotasDestinos.clear();
 
-        // Obter o restaurante da base de dados
-        RestauranteModel restaurante = restRepo.findAll().get(0); // Assume que só há um restaurante
+        List<RotasModel> rotasBanco = rotaRepo.findAll(); // Puxar do banco
+        if (rotasBanco.isEmpty()) {
+            return destinosAdaptados; // Retornar vazio se não houver rotas
+        }
+
+        RestauranteModel restaurante = restRepo.findAll().get(0);
         RotasModel restauranteRota = new RotasModel();
         restauranteRota.setLatitude(restaurante.getLatitudeRestaurante());
         restauranteRota.setLongitude(restaurante.getLongitudeRestaurante());
         restauranteRota.setNome("Restaurante");
 
-        // Ordenar rotas pela menor distância
-        rotasFront.sort(Comparator.comparingDouble(RotasModel::getDistanciaViagem));
+        rotasBanco.sort(Comparator.comparingDouble(RotasModel::getDistanciaViagem));
 
-        // Encontrar o próximo destino dentro do limite de tempo
         RotasModel destinoAtual = null;
         double tempoTotal = 0;
 
-        for (RotasModel rota : rotasFront) {
+        for (RotasModel rota : rotasBanco) {
             tempoTotal += rota.getTempoViagem();
             if (tempoTotal <= TEMPO_MAXIMO) {
                 destinoAtual = rota;
@@ -126,46 +103,34 @@ public class RotasService {
             }
         }
 
-        // Se não houver um destino válido, retorne a lista com o restaurante
         if (destinoAtual == null) {
             JSONObjectRotasFront restauranteJson = new JSONObjectRotasFront();
             restauranteJson.setNome("Restaurante");
             restauranteJson.setLatitude(restaurante.getLatitudeRestaurante());
             restauranteJson.setLongitude(restaurante.getLongitudeRestaurante());
-            restauranteJson.setQuantidadeMarmitas(0); // Restaurante não tem marmitas
+            restauranteJson.setQuantidadeMarmitas(0);
             restauranteJson.setDistanciaViagem(0);
             restauranteJson.setTempoViagem(0);
             restauranteJson.setSujestH("N/A");
-            restauranteJson.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador()); // Capacidade atualizada
+            restauranteJson.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
 
             destinosAdaptados.add(restauranteJson);
             return destinosAdaptados;
         }
 
-        // Calcular marmitas entregues
         int marmitasEntregues = Math.min(entregador.getQuantMarmitaEntregador(), destinoAtual.getQuantidadeMarmitas());
         destinoAtual.setQuantidadeMarmitas(destinoAtual.getQuantidadeMarmitas() - marmitasEntregues);
         entregador.setQuantMarmitaEntregador(entregador.getQuantMarmitaEntregador() - marmitasEntregues);
 
-        // Adicionar o destino atual em primeiro lugar
         rotasDestinos.add(destinoAtual);
+        rotasBanco.remove(destinoAtual);
 
-        // Remover ou atualizar o destino na lista original
-        if (destinoAtual.getQuantidadeMarmitas() > 0) {
-            rotasFront.remove(destinoAtual);
-            rotasFront.add(0, destinoAtual); // Reinsere no início para manter prioridade
-        } else {
-            rotasFront.remove(destinoAtual);
-        }
-
-        // Adicionar os destinos restantes, verificando duplicatas
-        for (RotasModel rota : rotasFront) {
-            if (!rotasDestinos.contains(rota)) { // Verificação para evitar duplicação
+        for (RotasModel rota : rotasBanco) {
+            if (!rotasDestinos.contains(rota)) {
                 rotasDestinos.add(rota);
             }
         }
 
-        // Adaptar as rotas para JSONObjectRotasFront
         for (RotasModel rota : rotasDestinos) {
             JSONObjectRotasFront jsonRota = new JSONObjectRotasFront();
             jsonRota.setNome(rota.getNome());
@@ -175,7 +140,7 @@ public class RotasService {
             jsonRota.setDistanciaViagem(rota.getDistanciaViagem());
             jsonRota.setTempoViagem(rota.getTempoViagem());
             jsonRota.setSujestH(rota.getSujestH());
-            jsonRota.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador()); // Capacidade atualizada
+            jsonRota.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
 
             destinosAdaptados.add(jsonRota);
         }
@@ -183,23 +148,19 @@ public class RotasService {
         return destinosAdaptados;
     }
 
-
-
-
-
-
-
     public List<RotasModel> getRotas() {
+        rotaRepo.deleteAll();
 
-        // Salvar lista final no banco usando uma classe intermediária
+        List<RotasModel> rotasBanco = rotaRepo.findAll(); // Carregar do banco
+
         TrajetoModel trajeto = new TrajetoModel();
-        trajeto.setRotas(new ArrayList<>(rotasFinal)); // Copiar lista para evitar modificações posteriores
+        trajeto.setRotas(rotasBanco);
         trajeto.setTotalMarmitasEntregues(entregador.getQuantMarmitaEntregador());
-        trajRepo.save(trajeto); // Salva o trajeto como um único objeto no banco
+        trajRepo.save(trajeto);
 
-        List<RotasModel> rotasRetorno = rotasFinal;
         rotasFinal.clear();
+        rotasFinal.addAll(rotasBanco);
 
-        return rotasRetorno;
+        return rotasFinal;
     }
 }
