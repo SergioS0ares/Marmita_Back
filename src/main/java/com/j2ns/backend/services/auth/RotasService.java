@@ -43,8 +43,6 @@ public class RotasService {
     private Entregador entregador;
 
     public void calcularRotas(List<Map<String, Object>> rotasComCapacidade) {
-        rotaRepo.deleteAll(); // Apagar todas as rotas do banco antes de salvar novas
-
         List<RotasModel> rotas = new ArrayList<>();
         int capacidadeMarmitas = 0;
 
@@ -74,8 +72,6 @@ public class RotasService {
     }
 
     public List<JSONObjectRotasFront> getDestinos() {
-        rotaRepo.deleteAll(); // Apagar as rotas existentes antes de salvar novamente no banco
-
         List<JSONObjectRotasFront> destinosAdaptados = new ArrayList<>();
         rotasDestinos.clear();
 
@@ -149,8 +145,6 @@ public class RotasService {
     }
 
     public List<RotasModel> getRotas() {
-        rotaRepo.deleteAll();
-
         List<RotasModel> rotasBanco = rotaRepo.findAll(); // Carregar do banco
 
         TrajetoModel trajeto = new TrajetoModel();
