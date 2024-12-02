@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import org.hibernate.annotations.GenericGenerator;
 import java.util.UUID;
+import java.util.Objects;
 
 @Entity
 public class RotasModel {
@@ -37,7 +38,24 @@ public class RotasModel {
     @Column
     private String sujestH;
     
-    
+    // toString
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        RotasModel that = (RotasModel) obj;
+        return nome.equals(that.nome) &&
+               latitude.equals(that.latitude) &&
+               longitude.equals(that.longitude); // ou qualquer outro critério único
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, latitude, longitude); // ou qualquer outro critério único
+    }
+
+
 
     // Métodos getters e setters
 
@@ -104,4 +122,19 @@ public class RotasModel {
     public void setSujestH(String sujestH) {
         this.sujestH = sujestH;
     }
+
+    public void setId(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("A ID não pode ser nula ou vazia.");
+        }
+
+        // Verificar se a string é um UUID válido
+        try {
+            UUID stringId = UUID.fromString(id); // Tenta criar um UUID com a string fornecida
+            this.id = stringId;       // Se for válido, define a ID
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("A ID fornecida não é válida. Deve estar no formato de um UUID.");
+        }
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.j2ns.backend.controllers.auth;
 
-import com.j2ns.backend.config.JSONobjectRotas;
+import com.j2ns.backend.config.JSONObjectRotasFront;
 import com.j2ns.backend.models.auth.RotasModel;
 import com.j2ns.backend.services.auth.RotasService;
 
@@ -32,7 +32,7 @@ public class RotasController {
 
     // Requisição GET para obter os destinos e restante das marmitas do entregador
     @GetMapping("/getDestino")
-    public JSONobjectRotas getDestino() {
+    public List<JSONObjectRotasFront> getDestino() {
         return serv.getDestinos(); // Retorna o JSONobjectRotas com a lista de destinos e status do entregador
     }
 
