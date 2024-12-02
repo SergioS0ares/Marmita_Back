@@ -126,9 +126,20 @@ public class RotasService {
             }
         }
 
-        // Se não houver um destino válido, retorne lista vazia
+        // Se não houver um destino válido, retorne a lista com o restaurante
         if (destinoAtual == null) {
-            return destinosAdaptados; 
+            JSONObjectRotasFront restauranteJson = new JSONObjectRotasFront();
+            restauranteJson.setNome("Restaurante");
+            restauranteJson.setLatitude(restaurante.getLatitudeRestaurante());
+            restauranteJson.setLongitude(restaurante.getLongitudeRestaurante());
+            restauranteJson.setQuantidadeMarmitas(0); // Restaurante não tem marmitas
+            restauranteJson.setDistanciaViagem(0);
+            restauranteJson.setTempoViagem(0);
+            restauranteJson.setSujestH("N/A");
+            restauranteJson.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador()); // Capacidade atualizada
+
+            destinosAdaptados.add(restauranteJson);
+            return destinosAdaptados;
         }
 
         // Calcular marmitas entregues
@@ -147,8 +158,12 @@ public class RotasService {
             rotasFront.remove(destinoAtual);
         }
 
-        // Adicionar os destinos restantes
-        rotasDestinos.addAll(rotasFront);
+        // Adicionar os destinos restantes, verificando duplicatas
+        for (RotasModel rota : rotasFront) {
+            if (!rotasDestinos.contains(rota)) { // Verificação para evitar duplicação
+                rotasDestinos.add(rota);
+            }
+        }
 
         // Adaptar as rotas para JSONObjectRotasFront
         for (RotasModel rota : rotasDestinos) {
@@ -167,6 +182,7 @@ public class RotasService {
 
         return destinosAdaptados;
     }
+
 
 
 
