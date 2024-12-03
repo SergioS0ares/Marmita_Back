@@ -93,25 +93,15 @@ public class RotasService {
             return destinosAdaptados; // Retornar vazio se não houver rotas
         }
 
-        // Adicionar a primeira rota (Restaurante)
         RestauranteModel restaurante = restRepo.findAll().get(0);
-        JSONObjectRotasFront restauranteJson = new JSONObjectRotasFront();
-        restauranteJson.setNome("Restaurante");
-        restauranteJson.setLatitude(restaurante.getLatitudeRestaurante());
-        restauranteJson.setLongitude(restaurante.getLongitudeRestaurante());
-        restauranteJson.setQuantidadeMarmitas(0);
-        restauranteJson.setDistanciaViagem(0);
-        restauranteJson.setTempoViagem(0);
-        restauranteJson.setSujestH("N/A");
-        restauranteJson.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
-        
-        // Adiciona o restaurante à lista
-        destinosAdaptados.add(restauranteJson);
+        RotasModel restauranteRota = new RotasModel();
+        restauranteRota.setLatitude(restaurante.getLatitudeRestaurante());
+        restauranteRota.setLongitude(restaurante.getLongitudeRestaurante());
+        restauranteRota.setNome("Restaurante");
 
         // Ordenar as rotas pela distância
         lista.sort(Comparator.comparingDouble(RotasModel::getDistanciaViagem));
 
-        // Definir o destino com menor distância
         RotasModel destinoAtual = null;
         double tempoTotal = 0;
 
@@ -127,7 +117,18 @@ public class RotasService {
 
         // Caso não tenha destino dentro do tempo máximo, adicionar o restaurante
         if (destinoAtual == null) {
-            return destinosAdaptados; // Retorna a lista apenas com o restaurante
+            JSONObjectRotasFront restauranteJson = new JSONObjectRotasFront();
+            restauranteJson.setNome("Restaurante");
+            restauranteJson.setLatitude(restaurante.getLatitudeRestaurante());
+            restauranteJson.setLongitude(restaurante.getLongitudeRestaurante());
+            restauranteJson.setQuantidadeMarmitas(0);
+            restauranteJson.setDistanciaViagem(0);
+            restauranteJson.setTempoViagem(0);
+            restauranteJson.setSujestH("N/A");
+            restauranteJson.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
+
+            destinosAdaptados.add(restauranteJson);
+            return destinosAdaptados;
         }
 
         // Definir quantidade de marmitas entregues
@@ -158,25 +159,21 @@ public class RotasService {
 
         // Adicionar os outros destinos restantes
         for (RotasModel rota : lista) {
-            // Evita adicionar a mesma rota que já foi selecionada como destino atual
-            if (!rota.equals(destinoAtual)) {
-                JSONObjectRotasFront jsonRota = new JSONObjectRotasFront();
-                jsonRota.setNome(rota.getNome());
-                jsonRota.setLatitude(rota.getLatitude());
-                jsonRota.setLongitude(rota.getLongitude());
-                jsonRota.setQuantidadeMarmitas(rota.getQuantidadeMarmitas());
-                jsonRota.setDistanciaViagem(rota.getDistanciaViagem());
-                jsonRota.setTempoViagem(rota.getTempoViagem());
-                jsonRota.setSujestH(rota.getSujestH());
-                jsonRota.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
+            JSONObjectRotasFront jsonRota = new JSONObjectRotasFront();
+            jsonRota.setNome(rota.getNome());
+            jsonRota.setLatitude(rota.getLatitude());
+            jsonRota.setLongitude(rota.getLongitude());
+            jsonRota.setQuantidadeMarmitas(rota.getQuantidadeMarmitas());
+            jsonRota.setDistanciaViagem(rota.getDistanciaViagem());
+            jsonRota.setTempoViagem(rota.getTempoViagem());
+            jsonRota.setSujestH(rota.getSujestH());
+            jsonRota.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
 
-                destinosAdaptados.add(jsonRota);
-            }
+            destinosAdaptados.add(jsonRota);
         }
 
         return destinosAdaptados;
     }
-
 
 
     public List<RotasModel> getRotas() {
