@@ -35,7 +35,7 @@ public class RotasService {
     @Autowired
     private TesteRepository testRepo;
 
-    private List<RotasModel> lista1 = new ArrayList<>();
+    private List<RotasModel> lista = new ArrayList<>();
     private static final int TEMPO_MAXIMO = 240;
 
     private Entregador entregador;
@@ -76,7 +76,7 @@ public class RotasService {
             testRepo.save(ent);
         }
 
-        lista1 = rotaRepo.findAll();
+        lista = rotaRepo.findAll();
         rotaRepo.deleteAll();
 
         entregador = new Entregador();
@@ -89,70 +89,99 @@ public class RotasService {
         // Utilizar lista1 em vez de acessar o banco diretamente
         List<JSONObjectRotasFront> destinosAdaptados = new ArrayList<>();
 
-        if (lista1.isEmpty()) {
+        if (lista.isEmpty()) {
             return destinosAdaptados; // Retornar vazio se não houver rotas
         }
 
+        // Adicionar a primeira rota (Restaurante)
         RestauranteModel restaurante = restRepo.findAll().get(0);
-        RotasModel restauranteRota = new RotasModel();
-        restauranteRota.setLatitude(restaurante.getLatitudeRestaurante());
-        restauranteRota.setLongitude(restaurante.getLongitudeRestaurante());
-        restauranteRota.setNome("Restaurante");
+        JSONObjectRotasFront restauranteJson = new JSONObjectRotasFront();
+        restauranteJson.setNome("Restaurante");
+        restauranteJson.setLatitude(restaurante.getLatitudeRestaurante());
+        restauranteJson.setLongitude(restaurante.getLongitudeRestaurante());
+        restauranteJson.setQuantidadeMarmitas(0);
+        restauranteJson.setDistanciaViagem(0);
+        restauranteJson.setTempoViagem(0);
+        restauranteJson.setSujestH("N/A");
+        restauranteJson.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
+        
+        // Adiciona o restaurante à lista
+        destinosAdaptados.add(restauranteJson);
 
-        lista1.sort(Comparator.comparingDouble(RotasModel::getDistanciaViagem));
+        // Ordenar as rotas pela distância
+        lista.sort(Comparator.comparingDouble(RotasModel::getDistanciaViagem));
 
+        // Definir o destino com menor distância
         RotasModel destinoAtual = null;
         double tempoTotal = 0;
 
-        for (RotasModel rota : lista1) {
+        // Verificar qual será o primeiro destino, respeitando o tempo máximo
+        for (RotasModel rota : lista) {
             tempoTotal += rota.getTempoViagem();
+            System.out.println("Tempo acumulado: " + tempoTotal); // Para debugar
             if (tempoTotal <= TEMPO_MAXIMO) {
                 destinoAtual = rota;
                 break;
             }
         }
 
+        // Caso não tenha destino dentro do tempo máximo, adicionar o restaurante
         if (destinoAtual == null) {
-            JSONObjectRotasFront restauranteJson = new JSONObjectRotasFront();
-            restauranteJson.setNome("Restaurante");
-            restauranteJson.setLatitude(restaurante.getLatitudeRestaurante());
-            restauranteJson.setLongitude(restaurante.getLongitudeRestaurante());
-            restauranteJson.setQuantidadeMarmitas(0);
-            restauranteJson.setDistanciaViagem(0);
-            restauranteJson.setTempoViagem(0);
-            restauranteJson.setSujestH("N/A");
-            restauranteJson.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
-
-            destinosAdaptados.add(restauranteJson);
-            return destinosAdaptados;
+            return destinosAdaptados; // Retorna a lista apenas com o restaurante
         }
 
+        // Definir quantidade de marmitas entregues
         int marmitasEntregues = Math.min(entregador.getQuantMarmitaEntregador(), destinoAtual.getQuantidadeMarmitas());
         destinoAtual.setQuantidadeMarmitas(destinoAtual.getQuantidadeMarmitas() - marmitasEntregues);
         entregador.setQuantMarmitaEntregador(entregador.getQuantMarmitaEntregador() - marmitasEntregues);
 
-        lista1.remove(destinoAtual);
+        // Marcar a rota como entregue, sem removê-la da lista
+        for (RotasModel rota : lista) {
+            if (rota.equals(destinoAtual)) {
+                rota.setQuantidadeMarmitas(rota.getQuantidadeMarmitas() - marmitasEntregues);
+                break;
+            }
+        }
 
-        for (RotasModel rota : lista1) {
-            JSONObjectRotasFront jsonRota = new JSONObjectRotasFront();
-            jsonRota.setNome(rota.getNome());
-            jsonRota.setLatitude(rota.getLatitude());
-            jsonRota.setLongitude(rota.getLongitude());
-            jsonRota.setQuantidadeMarmitas(rota.getQuantidadeMarmitas());
-            jsonRota.setDistanciaViagem(rota.getDistanciaViagem());
-            jsonRota.setTempoViagem(rota.getTempoViagem());
-            jsonRota.setSujestH(rota.getSujestH());
-            jsonRota.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
+        // Adicionar o destino atual
+        JSONObjectRotasFront destinoJson = new JSONObjectRotasFront();
+        destinoJson.setNome(destinoAtual.getNome());
+        destinoJson.setLatitude(destinoAtual.getLatitude());
+        destinoJson.setLongitude(destinoAtual.getLongitude());
+        destinoJson.setQuantidadeMarmitas(destinoAtual.getQuantidadeMarmitas());
+        destinoJson.setDistanciaViagem(destinoAtual.getDistanciaViagem());
+        destinoJson.setTempoViagem(destinoAtual.getTempoViagem());
+        destinoJson.setSujestH(destinoAtual.getSujestH());
+        destinoJson.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
 
-            destinosAdaptados.add(jsonRota);
+        destinosAdaptados.add(destinoJson);
+
+        // Adicionar os outros destinos restantes
+        for (RotasModel rota : lista) {
+            // Evita adicionar a mesma rota que já foi selecionada como destino atual
+            if (!rota.equals(destinoAtual)) {
+                JSONObjectRotasFront jsonRota = new JSONObjectRotasFront();
+                jsonRota.setNome(rota.getNome());
+                jsonRota.setLatitude(rota.getLatitude());
+                jsonRota.setLongitude(rota.getLongitude());
+                jsonRota.setQuantidadeMarmitas(rota.getQuantidadeMarmitas());
+                jsonRota.setDistanciaViagem(rota.getDistanciaViagem());
+                jsonRota.setTempoViagem(rota.getTempoViagem());
+                jsonRota.setSujestH(rota.getSujestH());
+                jsonRota.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
+
+                destinosAdaptados.add(jsonRota);
+            }
         }
 
         return destinosAdaptados;
     }
 
+
+
     public List<RotasModel> getRotas() {
         // Reanexar entidades "detached" ao contexto do Hibernate
-        List<RotasModel> rotasGerenciadas = rotaRepo.saveAll(lista1);
+        List<RotasModel> rotasGerenciadas = rotaRepo.saveAll(lista);
 
         // Criar o TrajetoModel com as rotas gerenciadas
         TrajetoModel trajeto = new TrajetoModel();
@@ -162,7 +191,7 @@ public class RotasService {
         // Salvar o trajeto no banco
         trajRepo.save(trajeto);
 
-        return lista1;
+        return lista;
     }
 
 }
