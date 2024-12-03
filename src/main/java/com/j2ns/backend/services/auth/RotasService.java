@@ -88,6 +88,9 @@ public class RotasService {
     public List<JSONObjectRotasFront> getDestinos() {
         List<JSONObjectRotasFront> destinosAdaptados = new ArrayList<>();
 
+        // Recarregar a lista de rotas sempre que o método for chamado
+        lista = rotaRepo.findAll();  // Atualiza a lista com os dados mais recentes do banco
+
         if (lista.isEmpty()) {
             return destinosAdaptados; // Retornar vazio se não houver rotas
         }
@@ -135,6 +138,7 @@ public class RotasService {
 
         return destinosAdaptados;
     }
+
 
 
 
