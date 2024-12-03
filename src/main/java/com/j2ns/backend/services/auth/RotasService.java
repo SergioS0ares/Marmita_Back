@@ -44,6 +44,7 @@ public class RotasService {
         List<RotasModel> rotas = new ArrayList<>();
         int capacidadeMarmitas = 0;
 
+        // Preparar as rotas com base nas informações recebidas
         for (Map<String, Object> item : rotasComCapacidade) {
             if (item.containsKey("capacidadeMarmitas")) {
                 capacidadeMarmitas = (int) item.getOrDefault("capacidadeMarmitas", 0);
@@ -66,7 +67,7 @@ public class RotasService {
             rotas.add(rota);
         }
 
-        // Salvar no banco
+        // Salvar as novas rotas no banco de dados (sem deletar previamente)
         rotaRepo.saveAll(rotas);
 
         // Teste adicional para salvar mensagens
@@ -76,53 +77,29 @@ public class RotasService {
             testRepo.save(ent);
         }
 
+        // Agora podemos consultar as rotas salvas do banco
         lista = rotaRepo.findAll();
-        rotaRepo.deleteAll();
 
+        // Configuração do entregador
         entregador = new Entregador();
         entregador.setQuantMarmitaEntregador(capacidadeMarmitas);
     }
 
-
-
     public List<JSONObjectRotasFront> getDestinos() {
         List<JSONObjectRotasFront> destinosAdaptados = new ArrayList<>();
 
-        // Recarregar a lista de rotas sempre que o método for chamado
+        // Certificar que a lista está atualizada a partir do banco de dados
         lista = rotaRepo.findAll();  // Atualiza a lista com os dados mais recentes do banco
 
         if (lista.isEmpty()) {
             return destinosAdaptados; // Retornar vazio se não houver rotas
         }
 
-        RestauranteModel restaurante = restRepo.findAll().get(0);
-        RotasModel restauranteRota = new RotasModel();
-        restauranteRota.setLatitude(restaurante.getLatitudeRestaurante());
-        restauranteRota.setLongitude(restaurante.getLongitudeRestaurante());
-        restauranteRota.setNome("Restaurante");
-
-        // Ordenar as rotas pela distância, com o primeiro destino sendo o mais próximo
+        // Organize as rotas pela menor distância de viagem
         lista.sort(Comparator.comparingDouble(RotasModel::getDistanciaViagem));
 
-        // Garantir que o primeiro destino da lista seja o mais próximo
-        RotasModel destinoAtual = lista.get(0); // O primeiro será o de menor distância
-
         // Adicionar o destino mais próximo primeiro
-        JSONObjectRotasFront destinoJson = new JSONObjectRotasFront();
-        destinoJson.setNome(destinoAtual.getNome());
-        destinoJson.setLatitude(destinoAtual.getLatitude());
-        destinoJson.setLongitude(destinoAtual.getLongitude());
-        destinoJson.setQuantidadeMarmitas(destinoAtual.getQuantidadeMarmitas());
-        destinoJson.setDistanciaViagem(destinoAtual.getDistanciaViagem());
-        destinoJson.setTempoViagem(destinoAtual.getTempoViagem());
-        destinoJson.setSujestH(destinoAtual.getSujestH());
-        destinoJson.setCapacidadeMarmitas(entregador.getQuantMarmitaEntregador());
-
-        destinosAdaptados.add(destinoJson);
-
-        // Agora adicionar os outros destinos restantes, sem excluir nada
-        for (int i = 1; i < lista.size(); i++) { // Começa da segunda posição
-            RotasModel rota = lista.get(i);
+        for (RotasModel rota : lista) {
             JSONObjectRotasFront jsonRota = new JSONObjectRotasFront();
             jsonRota.setNome(rota.getNome());
             jsonRota.setLatitude(rota.getLatitude());
@@ -138,6 +115,7 @@ public class RotasService {
 
         return destinosAdaptados;
     }
+
 
 
 
