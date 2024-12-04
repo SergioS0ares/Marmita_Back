@@ -75,7 +75,6 @@ public class RotasService {
             TesteEntity ent = new TesteEntity();
             ent.setMsg("ID salvo: " + rota.getId());
             testRepo.save(ent);
-            
         }
 
         // Agora podemos consultar as rotas salvas do banco
